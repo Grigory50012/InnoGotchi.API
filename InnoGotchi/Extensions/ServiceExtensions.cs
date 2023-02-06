@@ -1,4 +1,7 @@
-﻿using InnoGotchi.API.Infrastructure.Repository;
+﻿using InnoGotchi.API.Core.Contracts;
+using InnoGotchi.API.Core.Services.Abstractions;
+using InnoGotchi.API.Core.Services;
+using InnoGotchi.API.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace InnoGotchi.Extensions
@@ -18,5 +21,11 @@ namespace InnoGotchi.Extensions
             services.AddDbContext<RepositoryContext>(opts =>
             opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"), b =>
             b.MigrationsAssembly("InnoGotchi")));
+
+        public static void ConfigureRepositoryManager(this IServiceCollection services) =>
+            services.AddScoped<IRepositoryManager, RepositoryManager>();
+
+        public static void ConfigureServiceManager(this IServiceCollection services) =>
+            services.AddScoped<IServiceManager, ServiceManager>();
     }
 }

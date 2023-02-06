@@ -8,11 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Core\Contracts\Repositories\" />
     <Folder Include="Core\Entities\DataTransferObject\" />
-    <Folder Include="Core\Services.Abstractions\UserServices\" />
-    <Folder Include="Core\Services\UserServices\" />
-    <Folder Include="Infrastructure\Repository\UserRepositories\" />
   </ItemGroup>
 
   <ItemGroup>
