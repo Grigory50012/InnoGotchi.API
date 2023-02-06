@@ -12,6 +12,11 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
+app.ConfigureExceptionHandler();
+
+if (app.Environment.IsProduction())
+    app.UseHsts();
+
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
