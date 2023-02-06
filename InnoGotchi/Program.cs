@@ -8,6 +8,7 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 

@@ -8,6 +8,6 @@ namespace InnoGotchi.API.Core.Services.Abstractions
         IBodyPartService BodyPartService { get; }
         IUserService UserService { get; }
         IFarmService FarmService { get; }
-        IPetService IPetService { get; }
+        IPetService PetService { get; }
     }
 }
