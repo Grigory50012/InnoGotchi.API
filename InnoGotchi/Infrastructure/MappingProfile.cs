@@ -11,6 +11,8 @@ namespace InnoGotchi.Infrastructure
             CreateMap<Pet, PetDto>();
 
             CreateMap<BodyPart, BodyPartDto>();
+
+            CreateMap<Farm, FarmDto>();
         }
     }
 }
