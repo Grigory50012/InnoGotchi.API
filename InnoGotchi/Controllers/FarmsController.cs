@@ -18,5 +18,13 @@ namespace InnoGotchi.Controllers
 
             return Ok(farmDto);
         }
+
+        [HttpGet("collaborations/{userId:guid}")]
+        public async Task<IActionResult> GetCollaborationFarms(Guid userId)
+        {
+            var farmsDto = await _serviceManager.FarmService.GetCollaborationFarmsAsync(userId);
+
+            return Ok(farmsDto);
+        }
     }
 }

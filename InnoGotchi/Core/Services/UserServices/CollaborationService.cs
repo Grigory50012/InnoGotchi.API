@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using InnoGotchi.API.Core.Contracts;
 using InnoGotchi.API.Core.Services.Abstractions.UserServices;
+using InnoGotchi.Core.Entities.DataTransferObject;
 
 namespace InnoGotchi.API.Core.Services.UserServices
 {
@@ -13,6 +14,14 @@ namespace InnoGotchi.API.Core.Services.UserServices
         {
             _repository = repository;
             _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<CollaborationDto>> GetCollaborationAsync(Guid userId)
+        {
+            var collaborations = await _repository.Collaboration.GetCollaborationAsync(userId, trackChanges: false);
+
+            var collaborationsDto = _mapper.Map<IEnumerable<CollaborationDto>>(collaborations);
+            return collaborationsDto;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using InnoGotchi.API.Core.Contracts.Repositories;
 using InnoGotchi.API.Core.Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace InnoGotchi.API.Infrastructure.Repository.UserRepositories
 {
@@ -9,5 +10,9 @@ namespace InnoGotchi.API.Infrastructure.Repository.UserRepositories
             : base(repositoryContext)
         {
         }
+
+        public async Task<IEnumerable<Collaboration>> GetCollaborationAsync(Guid userId, bool trackChanges) =>
+            await FindByCondition(collaboration => collaboration.UserId.Equals(userId), trackChanges)
+            .ToListAsync();
     }
 }

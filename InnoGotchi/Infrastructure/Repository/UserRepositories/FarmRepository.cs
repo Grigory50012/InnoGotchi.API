@@ -15,6 +15,7 @@ namespace InnoGotchi.API.Infrastructure.Repository.UserRepositories
         public async Task<Farm> GetFarmAsync(Guid farmId, bool trackChanges) =>
             await FindByCondition(farm => farm.FarmId.Equals(farmId), trackChanges)
             .Include(farm => farm.Pets)
+                .ThenInclude(pets=> pets.BodyParts)
             .SingleOrDefaultAsync();
     }
 }

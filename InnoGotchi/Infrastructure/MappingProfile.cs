@@ -13,6 +13,8 @@ namespace InnoGotchi.Infrastructure
             CreateMap<BodyPart, BodyPartDto>();
 
             CreateMap<Farm, FarmDto>();
+
+            CreateMap<Collaboration, CollaborationDto>();
         }
     }
 }

@@ -5,5 +5,7 @@ namespace InnoGotchi.API.Core.Services.Abstractions.UserServices
     public interface IFarmService
     {
         Task<FarmDto> GetFarmAsync(Guid farmId);
+
+        Task<IEnumerable<FarmDto>> GetCollaborationFarmsAsync(Guid userId);
     }
 }
