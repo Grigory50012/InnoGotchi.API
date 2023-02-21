@@ -1,4 +1,5 @@
 ﻿using InnoGotchi.API.Core.Services.Abstractions;
+using InnoGotchi.Core.Entities.DataTransferObject;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoGotchi.Controllers
@@ -25,6 +26,14 @@ namespace InnoGotchi.Controllers
             var farmsDto = await _serviceManager.FarmService.GetCollaborationFarmsAsync(userId);
 
             return Ok(farmsDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateFarm([FromBody] FarmForCreationDto farm)
+        {
+            var farmDto = await _serviceManager.FarmService.CreateFarm(farm);
+
+            return CreatedAtAction(nameof(GetFarm), new { farmId = farmDto.FarmId }, farmDto);
         }
     }
 }

@@ -10,7 +10,7 @@
 
         public DateTime? DateOfDeath { get; set; }
 
-        public int DaysOfHappiness { get; set; }
+        public DateTime DaysOfHappiness { get; set; }
 
         public DateTime FeedingDate { get; set; }
 

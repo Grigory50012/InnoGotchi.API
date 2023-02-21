@@ -9,10 +9,12 @@ namespace InnoGotchi.Infrastructure
         public MappingProfile() 
         {
             CreateMap<Pet, PetDto>();
+            CreateMap<PetForCreationDto, Pet>();
 
             CreateMap<BodyPart, BodyPartDto>();
 
             CreateMap<Farm, FarmDto>();
+            CreateMap<FarmForCreationDto, Farm>();
 
             CreateMap<Collaboration, CollaborationDto>();
         }

@@ -40,5 +40,16 @@ namespace InnoGotchi.API.Core.Services.UserServices
             var farmsDto = _mapper.Map<IEnumerable<FarmDto>>(farms);
             return farmsDto;
         }
+
+        public async Task<FarmDto> CreateFarm(FarmForCreationDto farm)
+        {
+            var farmEntity = _mapper.Map<Farm>(farm);
+            
+            _repository.Farm.CreateFarm(farmEntity);
+            await _repository.SaveAsync();
+
+            var farmDto = _mapper.Map<FarmDto>(farmEntity);
+            return farmDto;
+        }
     }
 }
