@@ -18,5 +18,15 @@ namespace InnoGotchi.API.Infrastructure.Repository.UserRepositories
             .Include(pet => pet.BodyParts)
             .ToListAsync();
 
+        public async Task<Pet> GetPetAsync(Guid petId, bool trackChanges) =>
+            await FindByCondition(pet => pet.PetId.Equals(petId), trackChanges)
+            .Include(pet => pet.BodyParts)
+            .SingleOrDefaultAsync();
+
+        public void CreatePet(Pet pet)
+        {
+            RepositoryContext.Set<BodyPart>().AttachRange(pet.BodyParts);
+            Create(pet);
+        }
     }
 }

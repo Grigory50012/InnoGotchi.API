@@ -1,4 +1,5 @@
 ﻿using InnoGotchi.API.Core.Services.Abstractions;
+using InnoGotchi.Core.Entities.DataTransferObject;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoGotchi.Controllers
@@ -12,11 +13,27 @@ namespace InnoGotchi.Controllers
         public PetsController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
         [HttpGet]
-        public async Task<IActionResult> GetPets()
+        public async Task<IActionResult> GetAllPets()
         {
             var petsDto = await _serviceManager.PetService.GetAllPetsAsync();
 
             return Ok(petsDto);
+        }
+
+        [HttpGet("{petId:guid}")]
+        public async Task<IActionResult> GetPet(Guid petId)
+        {
+            var petDto = await _serviceManager.PetService.GetPetAsync(petId);
+
+            return Ok(petDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePet([FromBody] PetForCreationDto pet)
+        {
+            var petDto = await _serviceManager.PetService.CreatePet(pet);
+
+            return CreatedAtAction(nameof(GetPet), new { petId = petDto.PetId }, petDto);
         }
     }
 }
