@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using InnoGotchi.API.Core.Contracts;
 using InnoGotchi.API.Core.Services.Abstractions.UserServices;
+using InnoGotchi.Core.Entities.DataTransferObject;
 
 namespace InnoGotchi.API.Core.Services.UserServices
 {
@@ -13,6 +14,14 @@ namespace InnoGotchi.API.Core.Services.UserServices
         {
             _repository = repository;
             _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<BodyPartDto>> GetBodyPartsAsync()
+        {
+            var bodyParts = await _repository.BodyPart.GetBodyPartsAsync(trackChanges: false);
+
+            var bodyPartsDto = _mapper.Map<IEnumerable<BodyPartDto>>(bodyParts);
+            return bodyPartsDto;
         }
     }
 }
