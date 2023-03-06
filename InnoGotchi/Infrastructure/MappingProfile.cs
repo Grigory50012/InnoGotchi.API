@@ -17,6 +17,7 @@ namespace InnoGotchi.Infrastructure
             CreateMap<FarmForCreationDto, Farm>();
 
             CreateMap<Collaboration, CollaborationDto>();
+            CreateMap<CollaborationForCreationDto, Collaboration>();
         }
     }
 }
