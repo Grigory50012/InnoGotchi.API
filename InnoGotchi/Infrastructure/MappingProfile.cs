@@ -10,6 +10,7 @@ namespace InnoGotchi.Infrastructure
         {
             CreateMap<Pet, PetDto>();
             CreateMap<PetForCreationDto, Pet>();
+            CreateMap<PetForUpdateDto, Pet>().ReverseMap();
 
             CreateMap<BodyPart, BodyPartDto>();
 

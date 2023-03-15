@@ -13,11 +13,11 @@ namespace InnoGotchi.Controllers
         public CollaborationsController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
         [HttpPost("{email}")]
-        public async Task<IActionResult> CreateCollaboration(string userEmail, [FromBody] CollaborationForCreationDto collaboration)
+        public async Task<IActionResult> CreateCollaboration(string email, [FromBody] CollaborationForCreationDto collaboration)
         {
-            await _serviceManager.CollaborationService.CreateCollaboration(userEmail, collaboration);
+            await _serviceManager.CollaborationService.CreateCollaboration(email, collaboration);
 
-            return Ok();
+            return NoContent();
         }
     }
 }

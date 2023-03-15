@@ -20,10 +20,10 @@ namespace InnoGotchi.Controllers
             return Ok(farmDto);
         }
 
-        [HttpGet("{userId:guid}/collaborations")]
-        public async Task<IActionResult> GetCollaborationFarms(Guid userId)
+        [HttpGet("{ownerId:guid}/collaborations")]
+        public async Task<IActionResult> GetCollaborationFarms(Guid ownerId)
         {
-            var farmsDto = await _serviceManager.FarmService.GetCollaborationFarmsAsync(userId);
+            var farmsDto = await _serviceManager.FarmService.GetCollaborationFarmsAsync(ownerId);
 
             return Ok(farmsDto);
         }

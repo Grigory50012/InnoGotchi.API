@@ -3,6 +3,7 @@ using InnoGotchi.API.Core.Contracts;
 using InnoGotchi.API.Core.Entities.Models;
 using InnoGotchi.API.Core.Services.Abstractions.UserServices;
 using InnoGotchi.Core.Entities.DataTransferObject;
+using InnoGotchi.Core.Entities.Exceptions;
 
 namespace InnoGotchi.API.Core.Services.UserServices
 {
@@ -28,6 +29,8 @@ namespace InnoGotchi.API.Core.Services.UserServices
         public async Task<PetDto> GetPetAsync(Guid petId)
         {
             var pet = await _repository.Pet.GetPetAsync(petId, trackChanges: false);
+            if (pet is null)
+                throw new PetNotFoundException(petId);
 
             var petDto = _mapper.Map<PetDto>(pet);
             return petDto;
@@ -42,6 +45,24 @@ namespace InnoGotchi.API.Core.Services.UserServices
 
             var petDto = _mapper.Map<PetDto>(petEntity);
             return petDto;
+        }
+
+        public async Task<(PetForUpdateDto petToPatch, Pet pet)> GetPetForPatchAsync(Guid petId)
+        {
+            var pet = await _repository.Pet.GetPetAsync(petId, trackChanges: true);
+            if (pet is null)
+                throw new PetNotFoundException(petId);
+
+            var petToPatch = _mapper.Map<PetForUpdateDto>(pet);
+
+            return (petToPatch, pet);
+        }
+
+        public async Task SaveChangesForPatchAsync(PetForUpdateDto petToPatch, Pet pet)
+        {
+            _mapper.Map(petToPatch, pet);
+
+            await _repository.SaveAsync();
         }
     }
 }

@@ -3,6 +3,7 @@ using InnoGotchi.API.Core.Contracts;
 using InnoGotchi.API.Core.Entities.Models;
 using InnoGotchi.API.Core.Services.Abstractions.UserServices;
 using InnoGotchi.Core.Entities.DataTransferObject;
+using InnoGotchi.Core.Entities.Exceptions;
 
 namespace InnoGotchi.API.Core.Services.UserServices
 {
@@ -20,6 +21,8 @@ namespace InnoGotchi.API.Core.Services.UserServices
         public async Task<FarmDto> GetFarmAsync(Guid farmId)
         {
             var farm = await _repository.Farm.GetFarmAsync(farmId, trackChanges: false);
+            if (farm is null)
+                throw new FarmNotFoundException(farmId);
 
             var farmDto = _mapper.Map<FarmDto>(farm);
             return farmDto;
@@ -53,3 +56,4 @@ namespace InnoGotchi.API.Core.Services.UserServices
         }
     }
 }
+    
