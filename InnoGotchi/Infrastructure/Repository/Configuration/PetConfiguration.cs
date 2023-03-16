@@ -10,8 +10,8 @@ namespace InnoGotchi.API.Infrastructure.Repository.Configuration
         {
             builder.HasKey(x => x.PetId);
 
-            builder.HasIndex(x => x.Name);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
+            builder.HasIndex(x => x.Name).IsUnique();
 
             builder.HasMany(x => x.BodyParts).WithMany(x => x.Pets);
         }

@@ -31,7 +31,13 @@ namespace InnoGotchi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateFarm([FromBody] FarmForCreationDto farm)
         {
-            var farmDto = await _serviceManager.FarmService.CreateFarm(farm);
+            if (farm is null)
+                return BadRequest("FarmForCreationDto odject is null");
+
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
+
+            var farmDto = await _serviceManager.FarmService.CreateFarmAsync(farm);
 
             return CreatedAtAction(nameof(GetFarm), new { farmId = farmDto.FarmId }, farmDto);
         }

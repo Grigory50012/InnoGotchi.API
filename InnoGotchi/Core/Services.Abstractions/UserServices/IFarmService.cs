@@ -6,6 +6,6 @@ namespace InnoGotchi.API.Core.Services.Abstractions.UserServices
     {
         Task<IEnumerable<FarmDto>> GetCollaborationFarmsAsync(Guid userId);
         Task<FarmDto> GetFarmAsync(Guid farmId);
-        Task<FarmDto> CreateFarm(FarmForCreationDto farm);
+        Task<FarmDto> CreateFarmAsync(FarmForCreationDto farm);
     }
 }

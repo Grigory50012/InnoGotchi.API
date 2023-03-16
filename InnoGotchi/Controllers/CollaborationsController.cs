@@ -15,6 +15,12 @@ namespace InnoGotchi.Controllers
         [HttpPost("{email}")]
         public async Task<IActionResult> CreateCollaboration(string email, [FromBody] CollaborationForCreationDto collaboration)
         {
+            if (collaboration is null)
+                return BadRequest("CollaborationForCreationDto odject is null");
+
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
+
             await _serviceManager.CollaborationService.CreateCollaboration(email, collaboration);
 
             return NoContent();

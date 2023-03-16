@@ -32,7 +32,13 @@ namespace InnoGotchi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePet([FromBody] PetForCreationDto pet)
         {
-            var petDto = await _serviceManager.PetService.CreatePet(pet);
+            if (pet is null)
+                return BadRequest("PetForCreationDto odject is null");
+
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
+
+            var petDto = await _serviceManager.PetService.CreatePetAsync(pet);
 
             return CreatedAtAction(nameof(GetPet), new { petId = petDto.PetId }, petDto);
         }
@@ -43,11 +49,14 @@ namespace InnoGotchi.Controllers
             if (patchDoc is null)
                 return BadRequest("patchDoc object sent from client is null.");
 
-            var result = await _serviceManager.PetService.GetPetForPatchAsync(petId);
+            var (petToPatch, pet) = await _serviceManager.PetService.GetPetForPatchAsync(petId);
 
-            patchDoc.ApplyTo(result.petToPatch);
+            patchDoc.ApplyTo(petToPatch);
 
-            await _serviceManager.PetService.SaveChangesForPatchAsync(result.petToPatch, result.pet);
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
+
+            await _serviceManager.PetService.SaveChangesForPatchAsync(petToPatch, pet);
 
             return await GetPet(petId);
         }

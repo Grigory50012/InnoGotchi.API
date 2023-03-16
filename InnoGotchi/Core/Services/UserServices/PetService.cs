@@ -36,7 +36,7 @@ namespace InnoGotchi.API.Core.Services.UserServices
             return petDto;
         }
 
-        public async Task<PetDto> CreatePet(PetForCreationDto pet)
+        public async Task<PetDto> CreatePetAsync(PetForCreationDto pet)
         {
             var petEntity = _mapper.Map<Pet>(pet);
 

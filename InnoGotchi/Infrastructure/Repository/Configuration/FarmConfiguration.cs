@@ -11,7 +11,6 @@ namespace InnoGotchi.API.Infrastructure.Repository.Configuration
             builder.HasKey(x => x.FarmId);
 
             builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
-
             builder.HasIndex(x => x.Name).IsUnique();
 
             builder.HasMany(x => x.Pets)
