@@ -1,4 +1,5 @@
 ﻿using InnoGotchi.API.Core.Services.Abstractions;
+using InnoGotchi.Core.Entities.ActionFilter;
 using InnoGotchi.Core.Entities.DataTransferObject;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,14 +30,9 @@ namespace InnoGotchi.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateFarm([FromBody] FarmForCreationDto farm)
         {
-            if (farm is null)
-                return BadRequest("FarmForCreationDto odject is null");
-
-            if (!ModelState.IsValid)
-                return UnprocessableEntity(ModelState);
-
             var farmDto = await _serviceManager.FarmService.CreateFarmAsync(farm);
 
             return CreatedAtAction(nameof(GetFarm), new { farmId = farmDto.FarmId }, farmDto);

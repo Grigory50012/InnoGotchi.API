@@ -1,3 +1,4 @@
+using InnoGotchi.Core.Entities.ActionFilter;
 using InnoGotchi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();

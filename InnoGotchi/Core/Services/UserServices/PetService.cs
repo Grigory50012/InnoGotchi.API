@@ -26,11 +26,17 @@ namespace InnoGotchi.API.Core.Services.UserServices
             return petsDto;
         }
 
+        private async Task<Pet> GetPetAndCheckIfItExistssAsync(Guid id, bool trackChanges)
+        {
+            var pet = await _repository.Pet.GetPetAsync(id, trackChanges: true);
+            if (pet is null)
+                throw new PetNotFoundException(id);
+            return pet;
+        }
+
         public async Task<PetDto> GetPetAsync(Guid petId)
         {
-            var pet = await _repository.Pet.GetPetAsync(petId, trackChanges: false);
-            if (pet is null)
-                throw new PetNotFoundException(petId);
+            var pet = await GetPetAndCheckIfItExistssAsync(petId, trackChanges: false);
 
             var petDto = _mapper.Map<PetDto>(pet);
             return petDto;
@@ -49,9 +55,7 @@ namespace InnoGotchi.API.Core.Services.UserServices
 
         public async Task<(PetForUpdateDto petToPatch, Pet pet)> GetPetForPatchAsync(Guid petId)
         {
-            var pet = await _repository.Pet.GetPetAsync(petId, trackChanges: true);
-            if (pet is null)
-                throw new PetNotFoundException(petId);
+            var pet = await GetPetAndCheckIfItExistssAsync(petId, trackChanges: true);
 
             var petToPatch = _mapper.Map<PetForUpdateDto>(pet);
 
@@ -64,5 +68,6 @@ namespace InnoGotchi.API.Core.Services.UserServices
 
             await _repository.SaveAsync();
         }
+
     }
 }

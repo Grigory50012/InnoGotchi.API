@@ -1,4 +1,5 @@
 ﻿using InnoGotchi.API.Core.Services.Abstractions;
+using InnoGotchi.Core.Entities.ActionFilter;
 using InnoGotchi.Core.Entities.DataTransferObject;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -30,14 +31,9 @@ namespace InnoGotchi.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreatePet([FromBody] PetForCreationDto pet)
         {
-            if (pet is null)
-                return BadRequest("PetForCreationDto odject is null");
-
-            if (!ModelState.IsValid)
-                return UnprocessableEntity(ModelState);
-
             var petDto = await _serviceManager.PetService.CreatePetAsync(pet);
 
             return CreatedAtAction(nameof(GetPet), new { petId = petDto.PetId }, petDto);

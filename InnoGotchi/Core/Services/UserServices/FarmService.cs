@@ -18,11 +18,17 @@ namespace InnoGotchi.API.Core.Services.UserServices
             _mapper = mapper;
         }
 
+        private async Task<Farm> GetFarmAndCheckIfItExistssAsync(Guid id, bool trackChanges)
+        {
+            var farm = await _repository.Farm.GetFarmAsync(id, trackChanges: true);
+            if (farm is null)
+                throw new FarmNotFoundException(id);
+            return farm;
+        }
+
         public async Task<FarmDto> GetFarmAsync(Guid farmId)
         {
-            var farm = await _repository.Farm.GetFarmAsync(farmId, trackChanges: false);
-            if (farm is null)
-                throw new FarmNotFoundException(farmId);
+            var farm = await GetFarmAndCheckIfItExistssAsync(farmId, trackChanges: false);
 
             var farmDto = _mapper.Map<FarmDto>(farm);
             return farmDto;
