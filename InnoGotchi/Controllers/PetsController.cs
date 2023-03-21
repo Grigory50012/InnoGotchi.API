@@ -1,8 +1,10 @@
 ﻿using InnoGotchi.API.Core.Services.Abstractions;
 using InnoGotchi.Core.Entities.ActionFilter;
 using InnoGotchi.Core.Entities.DataTransferObject;
+using InnoGotchi.Core.Entities.RequestFeatures;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace InnoGotchi.Controllers
 {
@@ -15,11 +17,13 @@ namespace InnoGotchi.Controllers
         public PetsController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPets()
+        public async Task<IActionResult> GetAllPets([FromQuery] PetParameters petParameters)
         {
-            var petsDto = await _serviceManager.PetService.GetAllPetsAsync();
+            var pagedResult = await _serviceManager.PetService.GetAllPetsAsync(petParameters);
 
-            return Ok(petsDto);
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
+
+            return Ok(pagedResult.pets);
         }
 
         [HttpGet("{petId:guid}")]

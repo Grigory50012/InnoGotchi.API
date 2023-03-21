@@ -4,6 +4,7 @@ using InnoGotchi.API.Core.Entities.Models;
 using InnoGotchi.API.Core.Services.Abstractions.UserServices;
 using InnoGotchi.Core.Entities.DataTransferObject;
 using InnoGotchi.Core.Entities.Exceptions;
+using InnoGotchi.Core.Entities.RequestFeatures;
 
 namespace InnoGotchi.API.Core.Services.UserServices
 {
@@ -18,12 +19,12 @@ namespace InnoGotchi.API.Core.Services.UserServices
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PetDto>> GetAllPetsAsync()
+        public async Task<(IEnumerable<PetDto> pets, MetaData metaData)> GetAllPetsAsync(PetParameters petParameters)
         {
-            var pets = await _repository.Pet.GetAllPetsAsync(trackChanges: false);
+            var petsWithMetaData = await _repository.Pet.GetAllPetsAsync(petParameters, trackChanges: false);
 
-            var petsDto = _mapper.Map<IEnumerable<PetDto>>(pets);
-            return petsDto;
+            var petsDto = _mapper.Map<IEnumerable<PetDto>>(petsWithMetaData);
+            return (pets: petsDto, metaData: petsWithMetaData.MetaData);
         }
 
         private async Task<Pet> GetPetAndCheckIfItExistssAsync(Guid id, bool trackChanges)
@@ -68,6 +69,5 @@ namespace InnoGotchi.API.Core.Services.UserServices
 
             await _repository.SaveAsync();
         }
-
     }
 }

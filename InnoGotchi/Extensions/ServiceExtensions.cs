@@ -14,8 +14,9 @@ namespace InnoGotchi.Extensions
                 options.AddPolicy("CorsPolicy", builder =>
                 builder.AllowAnyOrigin()
                 .AllowAnyMethod()
-                .AllowAnyHeader());
-            });
+                .AllowAnyHeader()
+                .WithExposedHeaders("X-Pagination"));
+    });
 
         public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>
             services.AddDbContext<RepositoryContext>(opts =>
