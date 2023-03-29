@@ -1,6 +1,7 @@
 ﻿using InnoGotchi.API.Core.Contracts.Repositories;
 using InnoGotchi.API.Core.Entities.Models;
 using InnoGotchi.Core.Entities.RequestFeatures;
+using InnoGotchi.Infrastructure.Repository.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace InnoGotchi.API.Infrastructure.Repository.UserRepositories
@@ -16,7 +17,7 @@ namespace InnoGotchi.API.Infrastructure.Repository.UserRepositories
         public async Task<PagedList<Pet>> GetAllPetsAsync(PetParameters petParameters, bool trackChanges)
         {
             var pets = await FindAll(trackChanges)
-                .OrderBy(pet => pet.DaysOfHappiness)
+                .Sort(petParameters.OrderBy)
                 .Include(pet => pet.BodyParts)
                 .ToListAsync();
 

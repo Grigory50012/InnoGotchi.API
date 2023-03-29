@@ -2,6 +2,6 @@
 {
     public class PetParameters : RequestParameters
     {
-
+        public PetParameters() => OrderBy = "daysOfHappiness";
     }
 }
