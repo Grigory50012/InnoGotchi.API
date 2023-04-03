@@ -21,6 +21,9 @@ namespace InnoGotchi.API.Core.Services.UserServices
 
         public async Task<(IEnumerable<PetDto> pets, MetaData metaData)> GetAllPetsAsync(PetParameters petParameters)
         {
+            if (!petParameters.ValidAgeRange)
+                throw new MaxAgeRangeBadRequestException();
+
             var petsWithMetaData = await _repository.Pet.GetAllPetsAsync(petParameters, trackChanges: false);
 
             var petsDto = _mapper.Map<IEnumerable<PetDto>>(petsWithMetaData);

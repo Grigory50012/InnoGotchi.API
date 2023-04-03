@@ -16,20 +16,16 @@
 
         public DateTime DrinkingDate { get; set; }
 
+        public int Age
+        {
+            get
+            {
+                if (DateOfDeath is not null)
+                    return (DateOfDeath - DateOfBirth).Value.Days / 7;
+                return (DateTime.Now - DateOfBirth).Days / 7;
+            }
+        }
+
         public List<BodyPartDto> BodyParts { get; set; } = new();
-
-        public bool IsDead() 
-        {
-            if (DateOfDeath is not null)
-                return true;
-            return false;
-        }
-
-        public int Age()
-        {
-            if (DateOfDeath is not null)
-                return (DateOfDeath - DateOfBirth).Value.Days / 7;
-            return (DateTime.Now - DateOfBirth).Days / 7;
-        }
     }
 }

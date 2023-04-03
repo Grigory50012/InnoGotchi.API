@@ -14,7 +14,7 @@ namespace InnoGotchi.Core.Entities.ActionFilter
 
             var param = context.ActionArguments
                 .SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
-            if (param != null)
+            if (param is null)
             {
                 context.Result = new BadRequestObjectResult($"Object is null. Controller: {controller}, action: {action}");
                 return;

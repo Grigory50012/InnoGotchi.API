@@ -16,7 +16,8 @@ namespace InnoGotchi.API.Infrastructure.Repository.UserRepositories
 
         public async Task<PagedList<Pet>> GetAllPetsAsync(PetParameters petParameters, bool trackChanges)
         {
-            var pets = await FindAll(trackChanges)
+            var pets = await FindByCondition((pet => pet.DateOfBirth <= petParameters.MinDateOfBirth 
+            && pet.DateOfBirth >= petParameters.MaxDateOfBirth), trackChanges)
                 .Sort(petParameters.OrderBy)
                 .Include(pet => pet.BodyParts)
                 .ToListAsync();
