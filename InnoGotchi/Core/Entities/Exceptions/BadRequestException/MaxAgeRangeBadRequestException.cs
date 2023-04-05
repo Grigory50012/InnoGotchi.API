@@ -1,4 +1,4 @@
-﻿namespace InnoGotchi.Core.Entities.Exceptions
+﻿namespace InnoGotchi.Core.Entities.Exceptions.BadRequestException
 {
     public sealed class MaxAgeRangeBadRequestException : BadRequestException
     {

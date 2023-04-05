@@ -1,5 +1,5 @@
 ﻿using InnoGotchi.Core.Entities.ErrorModel;
-using InnoGotchi.Core.Entities.Exceptions;
+using InnoGotchi.Core.Entities.Exceptions.NotFoundExcrption;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
 

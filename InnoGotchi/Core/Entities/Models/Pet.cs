@@ -13,7 +13,7 @@
 
         public DateTime DateOfBirth { get; set; }
 
-        public DateTime? DateOfDeath { get; set; }
+        public DateTime DateOfDeath { get; set; }
 
         public DateTime DaysOfHappiness { get; set; }
 

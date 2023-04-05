@@ -3,7 +3,7 @@ using InnoGotchi.API.Core.Contracts;
 using InnoGotchi.API.Core.Entities.Models;
 using InnoGotchi.API.Core.Services.Abstractions.UserServices;
 using InnoGotchi.Core.Entities.DataTransferObject;
-using InnoGotchi.Core.Entities.Exceptions;
+using InnoGotchi.Core.Entities.Exceptions.NotFoundExcrption;
 
 namespace InnoGotchi.API.Core.Services.UserServices
 {

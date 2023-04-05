@@ -3,7 +3,8 @@ using InnoGotchi.API.Core.Contracts;
 using InnoGotchi.API.Core.Entities.Models;
 using InnoGotchi.API.Core.Services.Abstractions.UserServices;
 using InnoGotchi.Core.Entities.DataTransferObject;
-using InnoGotchi.Core.Entities.Exceptions;
+using InnoGotchi.Core.Entities.Exceptions.BadRequestException;
+using InnoGotchi.Core.Entities.Exceptions.NotFoundExcrption;
 using InnoGotchi.Core.Entities.RequestFeatures;
 
 namespace InnoGotchi.API.Core.Services.UserServices
@@ -24,6 +25,12 @@ namespace InnoGotchi.API.Core.Services.UserServices
             if (!petParameters.ValidAgeRange)
                 throw new MaxAgeRangeBadRequestException();
 
+            if (!petParameters.ValidHungerLevelRange)
+                throw new MaxHungerLevelRangeBadRequestException();
+
+            if (!petParameters.ValidThirstyLevelRange)
+                throw new MaxThirstyLevelRangeBadRequestException();
+
             var petsWithMetaData = await _repository.Pet.GetAllPetsAsync(petParameters, trackChanges: false);
 
             var petsDto = _mapper.Map<IEnumerable<PetDto>>(petsWithMetaData);
@@ -32,7 +39,7 @@ namespace InnoGotchi.API.Core.Services.UserServices
 
         private async Task<Pet> GetPetAndCheckIfItExistssAsync(Guid id, bool trackChanges)
         {
-            var pet = await _repository.Pet.GetPetAsync(id, trackChanges: true);
+            var pet = await _repository.Pet.GetPetAsync(id, trackChanges);
             if (pet is null)
                 throw new PetNotFoundException(id);
             return pet;

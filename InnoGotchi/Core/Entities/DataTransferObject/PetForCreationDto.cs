@@ -21,5 +21,7 @@ namespace InnoGotchi.Core.Entities.DataTransferObject
         public DateTime FeedingDate { get; set; } = DateTime.Now;
 
         public DateTime DrinkingDate { get; set; } = DateTime.Now;
+
+        public DateTime DateOfDeath { get; set; } = DateTime.Now.AddDays(7);
     }
 }
