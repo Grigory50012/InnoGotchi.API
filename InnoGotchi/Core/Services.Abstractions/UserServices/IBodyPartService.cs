@@ -1,9 +1,8 @@
 ﻿using InnoGotchi.Core.Entities.DataTransferObject;
 
-namespace InnoGotchi.API.Core.Services.Abstractions.UserServices
+namespace InnoGotchi.API.Core.Services.Abstractions.UserServices;
+
+public interface IBodyPartService
 {
-    public interface IBodyPartService
-    {
-        Task<IEnumerable<BodyPartDto>> GetBodyPartsAsync();
-    }
+    Task<IEnumerable<BodyPartDto>> GetBodyPartsAsync();
 }

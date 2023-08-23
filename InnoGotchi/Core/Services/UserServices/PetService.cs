@@ -7,77 +7,82 @@ using InnoGotchi.Core.Entities.Exceptions.BadRequestException;
 using InnoGotchi.Core.Entities.Exceptions.NotFoundExcrption;
 using InnoGotchi.Core.Entities.RequestFeatures;
 
-namespace InnoGotchi.API.Core.Services.UserServices
+namespace InnoGotchi.API.Core.Services.UserServices;
+
+internal sealed class PetService : IPetService
 {
-    internal sealed class PetService : IPetService
+    private readonly IRepositoryManager _repository;
+    private readonly IMapper _mapper;
+
+    public PetService(IRepositoryManager repository, IMapper mapper)
     {
-        private readonly IRepositoryManager _repository;
-        private readonly IMapper _mapper;
+        _repository = repository;
+        _mapper = mapper;
+    }
 
-        public PetService(IRepositoryManager repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-        }
+    public async Task<(IEnumerable<PetDto> pets, MetaData metaData)> GetAllPetsAsync(PetParameters petParameters)
+    {
+        IsValidPetParameters(petParameters);
 
-        public async Task<(IEnumerable<PetDto> pets, MetaData metaData)> GetAllPetsAsync(PetParameters petParameters)
-        {
-            if (!petParameters.ValidAgeRange)
-                throw new MaxAgeRangeBadRequestException();
+        var pets = await _repository.Pet.GetAllPetsAsync(petParameters, trackChanges: false);
 
-            if (!petParameters.ValidHungerLevelRange)
-                throw new MaxHungerLevelRangeBadRequestException();
+        var petsDto = _mapper.Map<IEnumerable<PetDto>>(pets);
+        return (pets: petsDto, metaData: pets.MetaData);
+    }
 
-            if (!petParameters.ValidThirstyLevelRange)
-                throw new MaxThirstyLevelRangeBadRequestException();
+    private void IsValidPetParameters(PetParameters petParameters)
+    {
+        if (!petParameters.ValidAgeRange)
+            throw new MaxAgeRangeBadRequestException();
 
-            var petsWithMetaData = await _repository.Pet.GetAllPetsAsync(petParameters, trackChanges: false);
+        if (!petParameters.ValidHungerLevelRange)
+            throw new MaxHungerLevelRangeBadRequestException();
 
-            var petsDto = _mapper.Map<IEnumerable<PetDto>>(petsWithMetaData);
-            return (pets: petsDto, metaData: petsWithMetaData.MetaData);
-        }
+        if (!petParameters.ValidThirstyLevelRange)
+            throw new MaxThirstyLevelRangeBadRequestException();
+    }
 
-        private async Task<Pet> GetPetAndCheckIfItExistssAsync(Guid id, bool trackChanges)
-        {
-            var pet = await _repository.Pet.GetPetAsync(id, trackChanges);
-            if (pet is null)
-                throw new PetNotFoundException(id);
-            return pet;
-        }
+    public async Task<PetDto> GetPetAsync(Guid petId)
+    {
+        var pet = await GetPetAndCheckIfItExistssAsync(petId, trackChanges: false);
 
-        public async Task<PetDto> GetPetAsync(Guid petId)
-        {
-            var pet = await GetPetAndCheckIfItExistssAsync(petId, trackChanges: false);
+        var petDto = _mapper.Map<PetDto>(pet);
+        return petDto;
+    }
 
-            var petDto = _mapper.Map<PetDto>(pet);
-            return petDto;
-        }
+    public async Task<(PetForUpdateDto petToPatch, Pet pet)> GetPetForPatchAsync(Guid petId)
+    {
+        var pet = await GetPetAndCheckIfItExistssAsync(petId, trackChanges: true);
 
-        public async Task<PetDto> CreatePetAsync(PetForCreationDto pet)
-        {
-            var petEntity = _mapper.Map<Pet>(pet);
+        var petToPatch = _mapper.Map<PetForUpdateDto>(pet);
+        return (petToPatch, pet);
+    }
 
-            _repository.Pet.CreatePet(petEntity);
-            await _repository.SaveAsync();
+    private async Task<Pet> GetPetAndCheckIfItExistssAsync(Guid id, bool trackChanges)
+    {
+        var pet = await _repository.Pet.GetPetAsync(id, trackChanges);
 
-            var petDto = _mapper.Map<PetDto>(petEntity);
-            return petDto;
-        }
+        if (pet is null)
+            throw new PetNotFoundException(id);
 
-        public async Task<(PetForUpdateDto petToPatch, Pet pet)> GetPetForPatchAsync(Guid petId)
-        {
-            var pet = await GetPetAndCheckIfItExistssAsync(petId, trackChanges: true);
+        return pet;
+    }
 
-            var petToPatch = _mapper.Map<PetForUpdateDto>(pet);
+    public async Task<PetDto> CreatePetAsync(PetForCreationDto pet)
+    {
+        var petEntity = _mapper.Map<Pet>(pet);
 
-            return (petToPatch, pet);
-        }
+        _repository.Pet.CreatePet(petEntity);
+        await _repository.SaveAsync();
 
-        public async Task SaveChangesForPatchAsync(PetForUpdateDto petToPatch, Pet pet)
-        {
-            _mapper.Map(petToPatch, pet);
+        var petDto = _mapper.Map<PetDto>(petEntity);
+        return petDto;
+    }
 
-            await _repository.SaveAsync();
-        }
+    public async Task SaveChangesForPatchAsync(PetForUpdateDto petToPatch, Pet pet)
+    {
+        _mapper.Map(petToPatch, pet);
+
+        await _repository.SaveAsync();
     }
 }

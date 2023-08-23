@@ -2,18 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace InnoGotchi.API.Infrastructure.Repository.Configuration
+namespace InnoGotchi.API.Infrastructure.Repository.Configuration;
+
+public class PetConfiguration : IEntityTypeConfiguration<Pet>
 {
-    public class PetConfiguration : IEntityTypeConfiguration<Pet>
+    public void Configure(EntityTypeBuilder<Pet> builder)
     {
-        public void Configure(EntityTypeBuilder<Pet> builder)
-        {
-            builder.HasKey(x => x.PetId);
+        builder.HasKey(pet => pet.PetId);
 
-            builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
-            builder.HasIndex(x => x.Name).IsUnique();
+        builder.Property(pet => pet.Name).IsRequired().HasMaxLength(50);
+        builder.HasIndex(pet => pet.Name).IsUnique();
 
-            builder.HasMany(x => x.BodyParts).WithMany(x => x.Pets);
-        }
+        builder.HasMany(pet => pet.BodyParts)
+            .WithMany(bodyPart => bodyPart.Pets);
     }
 }

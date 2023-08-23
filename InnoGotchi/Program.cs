@@ -11,6 +11,8 @@ builder.Services.ConfigureServiceManager();
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
 
 var app = builder.Build();
 
@@ -23,6 +25,7 @@ if (app.Environment.IsProduction())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

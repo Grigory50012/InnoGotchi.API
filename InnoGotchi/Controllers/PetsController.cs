@@ -1,64 +1,64 @@
 ﻿using InnoGotchi.API.Core.Services.Abstractions;
 using InnoGotchi.Core.Entities.ActionFilter;
 using InnoGotchi.Core.Entities.DataTransferObject;
+using InnoGotchi.Core.Entities.Exceptions.BadRequestException;
 using InnoGotchi.Core.Entities.RequestFeatures;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
-namespace InnoGotchi.Controllers
+namespace InnoGotchi.Controllers;
+
+[Route("api/pets")]
+[ApiController]
+public class PetsController : ControllerBase
 {
-    [Route("api/pets")]
-    [ApiController]
-    public class PetsController : ControllerBase
+    private readonly IServiceManager _serviceManager;
+
+    public PetsController(IServiceManager serviceManager) => _serviceManager = serviceManager;
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllPets([FromQuery] PetParameters petParameters)
     {
-        private readonly IServiceManager _serviceManager;
+        var pagedResult = await _serviceManager.PetService.GetAllPetsAsync(petParameters);
 
-        public PetsController(IServiceManager serviceManager) => _serviceManager = serviceManager;
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllPets([FromQuery] PetParameters petParameters)
-        {
-            var pagedResult = await _serviceManager.PetService.GetAllPetsAsync(petParameters);
+        return Ok(pagedResult.pets);
+    }
 
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
+    [HttpGet("{petId:guid}")]
+    public async Task<IActionResult> GetPet(Guid petId)
+    {
+        var petDto = await _serviceManager.PetService.GetPetAsync(petId);
 
-            return Ok(pagedResult.pets);
-        }
+        return Ok(petDto);
+    }
 
-        [HttpGet("{petId:guid}")]
-        public async Task<IActionResult> GetPet(Guid petId)
-        {
-            var petDto = await _serviceManager.PetService.GetPetAsync(petId);
+    [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> CreatePet([FromBody] PetForCreationDto pet)
+    {
+        var petDto = await _serviceManager.PetService.CreatePetAsync(pet);
 
-            return Ok(petDto);
-        }
+        return CreatedAtAction(nameof(GetPet), new { petId = petDto.PetId }, petDto);
+    }
 
-        [HttpPost]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> CreatePet([FromBody] PetForCreationDto pet)
-        {
-            var petDto = await _serviceManager.PetService.CreatePetAsync(pet);
+    [HttpPatch("{petId:guid}")]
+    public async Task<IActionResult> UpdatePet(Guid petId, [FromBody] JsonPatchDocument<PetForUpdateDto> patchDoc)
+    {
+        if (patchDoc is null)
+            throw new PatchDocObjectIsNullBadRequestException();
 
-            return CreatedAtAction(nameof(GetPet), new { petId = petDto.PetId }, petDto);
-        }
+        var (petToPatch, pet) = await _serviceManager.PetService.GetPetForPatchAsync(petId);
 
-        [HttpPatch("{petId:guid}")]
-        public async Task<IActionResult> UpdatePet(Guid petId, [FromBody] JsonPatchDocument<PetForUpdateDto> patchDoc)
-        {
-            if (patchDoc is null)
-                return BadRequest("patchDoc object sent from client is null.");
+        patchDoc.ApplyTo(petToPatch);
 
-            var (petToPatch, pet) = await _serviceManager.PetService.GetPetForPatchAsync(petId);
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
 
-            patchDoc.ApplyTo(petToPatch);
+        await _serviceManager.PetService.SaveChangesForPatchAsync(petToPatch, pet);
 
-            if (!ModelState.IsValid)
-                return UnprocessableEntity(ModelState);
-
-            await _serviceManager.PetService.SaveChangesForPatchAsync(petToPatch, pet);
-
-            return await GetPet(petId);
-        }
+        return await GetPet(petId);
     }
 }

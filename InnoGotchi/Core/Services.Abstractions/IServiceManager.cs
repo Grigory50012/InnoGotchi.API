@@ -1,4 +1,5 @@
 ﻿using InnoGotchi.API.Core.Services.Abstractions.UserServices;
+using InnoGotchi.Core.Services.Abstractions.UserServices;
 
 namespace InnoGotchi.API.Core.Services.Abstractions
 {
@@ -6,8 +7,8 @@ namespace InnoGotchi.API.Core.Services.Abstractions
     {
         ICollaborationService CollaborationService { get; }
         IBodyPartService BodyPartService { get; }
-        IUserService UserService { get; }
         IFarmService FarmService { get; }
         IPetService PetService { get; }
+        IAuthenticationService AuthenticationService { get; }
     }
 }

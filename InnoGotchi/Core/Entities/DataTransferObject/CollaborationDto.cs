@@ -1,7 +1,6 @@
-﻿namespace InnoGotchi.Core.Entities.DataTransferObject
+﻿namespace InnoGotchi.Core.Entities.DataTransferObject;
+
+public class CollaborationDto
 {
-    public class CollaborationDto
-    {
-        public Guid FarmId { get; set; }
-    }
+    public Guid FarmId { get; set; }
 }

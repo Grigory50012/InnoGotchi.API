@@ -1,13 +1,12 @@
-﻿namespace InnoGotchi.Core.Entities.DataTransferObject
+﻿namespace InnoGotchi.Core.Entities.DataTransferObject;
+
+public class FarmDto
 {
-    public class FarmDto
-    {
-        public Guid FarmId { get; set; }
+    public Guid FarmId { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public Guid OwnerId { get; set; }
+    public Guid OwnerId { get; set; }
 
-        public List<PetDto>? Pets { get; set; } = new();
-    }
+    public List<PetDto>? Pets { get; set; } = new();
 }

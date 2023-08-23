@@ -1,9 +1,8 @@
 ﻿using InnoGotchi.API.Core.Entities.Models;
 
-namespace InnoGotchi.API.Core.Contracts.Repositories
+namespace InnoGotchi.API.Core.Contracts.Repositories;
+
+public interface IBodyPartRepository
 {
-    public interface IBodyPartRepository
-    {
-        Task<IEnumerable<BodyPart>> GetBodyPartsAsync(bool trackChanges);
-    }
+    Task<IEnumerable<BodyPart>> GetBodyPartsAsync(bool trackChanges);
 }

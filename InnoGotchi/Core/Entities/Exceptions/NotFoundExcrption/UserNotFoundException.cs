@@ -1,9 +1,8 @@
-﻿namespace InnoGotchi.Core.Entities.Exceptions.NotFoundExcrption
+﻿namespace InnoGotchi.Core.Entities.Exceptions.NotFoundExcrption;
+
+public sealed class UserNotFoundException : NotFoundException
 {
-    public sealed class UserNotFoundException : NotFoundException
-    {
-        public UserNotFoundException(string email)
-            : base($"User with email: '{email}' not found")
-        { }
-    }
+    public UserNotFoundException(string name)
+        : base($"User with name: '{name}' not found")
+    { }
 }

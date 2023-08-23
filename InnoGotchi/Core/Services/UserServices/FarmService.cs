@@ -5,61 +5,59 @@ using InnoGotchi.API.Core.Services.Abstractions.UserServices;
 using InnoGotchi.Core.Entities.DataTransferObject;
 using InnoGotchi.Core.Entities.Exceptions.NotFoundExcrption;
 
-namespace InnoGotchi.API.Core.Services.UserServices
+namespace InnoGotchi.API.Core.Services.UserServices;
+
+internal sealed class FarmService : IFarmService
 {
-    internal sealed class FarmService : IFarmService
+    private readonly IRepositoryManager _repository;
+    private readonly IMapper _mapper;
+
+    public FarmService(IRepositoryManager repository, IMapper mapper)
     {
-        private readonly IRepositoryManager _repository;
-        private readonly IMapper _mapper;
+        _repository = repository;
+        _mapper = mapper;
+    }
 
-        public FarmService(IRepositoryManager repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-        }
+    private async Task<Farm> GetFarmAndCheckIfItExistssAsync(Guid id, bool trackChanges)
+    {
+        var farm = await _repository.Farm.GetFarmAsync(id, trackChanges: true);
+        if (farm is null)
+            throw new FarmNotFoundException(id);
+        return farm;
+    }
 
-        private async Task<Farm> GetFarmAndCheckIfItExistssAsync(Guid id, bool trackChanges)
-        {
-            var farm = await _repository.Farm.GetFarmAsync(id, trackChanges: true);
-            if (farm is null)
-                throw new FarmNotFoundException(id);
-            return farm;
-        }
+    public async Task<FarmDto> GetFarmAsync(Guid farmId)
+    {
+        var farm = await GetFarmAndCheckIfItExistssAsync(farmId, trackChanges: false);
 
-        public async Task<FarmDto> GetFarmAsync(Guid farmId)
-        {
-            var farm = await GetFarmAndCheckIfItExistssAsync(farmId, trackChanges: false);
+        var farmDto = _mapper.Map<FarmDto>(farm);
+        return farmDto;
+    }
 
-            var farmDto = _mapper.Map<FarmDto>(farm);
-            return farmDto;
-        }
+    //public async Task<IEnumerable<FarmDto>> GetCollaborationFarmsAsync(Guid userId)
+    //{
+    //    var collaborations = await _repository.Collaboration.GetCollaborationAsync(userId, trackChanges: false);
 
-        public async Task<IEnumerable<FarmDto>> GetCollaborationFarmsAsync(Guid userId)
-        {
-            var collaborations = await _repository.Collaboration.GetCollaborationAsync(userId, trackChanges: false);
+    //    var farms = new List<Farm>();
 
-            var farms = new List<Farm>();
+    //    foreach (var collaboration in collaborations)
+    //    {
+    //        var farm = await _repository.Farm.GetFarmAsync(collaboration.FarmId, trackChanges: false);
+    //        farms.Add(farm);
+    //    }
 
-            foreach (var collaboration in collaborations)
-            {
-                var farm = await _repository.Farm.GetFarmAsync(collaboration.FarmId, trackChanges: false);
-                farms.Add(farm);
-            }
+    //    var farmsDto = _mapper.Map<IEnumerable<FarmDto>>(farms);
+    //    return farmsDto;
+    //}
 
-            var farmsDto = _mapper.Map<IEnumerable<FarmDto>>(farms);
-            return farmsDto;
-        }
+    public async Task<FarmDto> CreateFarmAsync(FarmForCreationDto farm)
+    {
+        var farmEntity = _mapper.Map<Farm>(farm);
+        
+        _repository.Farm.CreateFarm(farmEntity);
+        await _repository.SaveAsync();
 
-        public async Task<FarmDto> CreateFarmAsync(FarmForCreationDto farm)
-        {
-            var farmEntity = _mapper.Map<Farm>(farm);
-            
-            _repository.Farm.CreateFarm(farmEntity);
-            await _repository.SaveAsync();
-
-            var farmDto = _mapper.Map<FarmDto>(farmEntity);
-            return farmDto;
-        }
+        var farmDto = _mapper.Map<FarmDto>(farmEntity);
+        return farmDto;
     }
 }
-    

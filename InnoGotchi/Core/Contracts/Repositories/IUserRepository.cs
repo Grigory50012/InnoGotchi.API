@@ -1,9 +1,8 @@
-﻿using InnoGotchi.API.Core.Entities.Models;
+﻿using InnoGotchi.Core.Entities.Models;
 
-namespace InnoGotchi.API.Core.Contracts.Repositories
+namespace InnoGotchi.API.Core.Contracts.Repositories;
+
+public interface IUserRepository
 {
-    public interface IUserRepository
-    {
-        Task<User> GetUserByEmailAsync(string email, bool trackChanges);
-    }
+    Task<User> GetUserByNameAsync(string name, bool trackChanges);
 }
