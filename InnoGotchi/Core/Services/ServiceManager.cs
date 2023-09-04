@@ -19,13 +19,13 @@ public sealed class ServiceManager : IServiceManager
     private readonly Lazy<IAuthenticationService> _authenticationService;
 
     public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, 
-        UserManager<User> userManager)
+        UserManager<User> userManager, IConfiguration configuration)
     {
         _bodyPartService = new Lazy<IBodyPartService>(() => new BodyPartService(repositoryManager, mapper));
         _collaborationService = new Lazy<ICollaborationService>(() => new CollaborationService(repositoryManager, mapper));
         _farmService = new Lazy<IFarmService>(() => new FarmService(repositoryManager, mapper));
         _petService = new Lazy<IPetService>(() => new PetService(repositoryManager, mapper));
-        _authenticationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(mapper, userManager));
+        _authenticationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(mapper, userManager, configuration));
     }
 
     public ICollaborationService CollaborationService => _collaborationService.Value;

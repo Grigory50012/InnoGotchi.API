@@ -1,6 +1,7 @@
 ﻿using InnoGotchi.API.Core.Services.Abstractions;
 using InnoGotchi.Core.Entities.ActionFilter;
 using InnoGotchi.Core.Entities.DataTransferObject;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoGotchi.Controllers;
@@ -14,6 +15,7 @@ public class FarmsController : ControllerBase
     public FarmsController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
     [HttpGet("{farmId:guid}")]
+    [Authorize]
     public async Task<IActionResult> GetFarm(Guid farmId)
     {
         var farmDto = await _serviceManager.FarmService.GetFarmAsync(farmId);
@@ -31,6 +33,7 @@ public class FarmsController : ControllerBase
 
     [HttpPost]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
+    [Authorize]
     public async Task<IActionResult> CreateFarm([FromBody] FarmForCreationDto farm)
     {
         var farmDto = await _serviceManager.FarmService.CreateFarmAsync(farm);

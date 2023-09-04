@@ -6,4 +6,6 @@ namespace InnoGotchi.Core.Services.Abstractions.UserServices;
 public interface IAuthenticationService
 {
     Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration);
+    Task<bool> ValidateUser(UserForAuthenticationDto userForAuth);
+    Task<string> CreateToken();
 }
