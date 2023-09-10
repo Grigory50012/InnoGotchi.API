@@ -11,9 +11,9 @@ public class CollaborationRepository : RepositoryBase<Collaboration>, ICollabora
     {
     }
 
-    //public async Task<IEnumerable<Collaboration>> GetCollaborationAsync(Guid userId, bool trackChanges) =>
-    //    await FindByCondition(collaboration => collaboration.UserId.Equals(userId), trackChanges)
-    //    .ToListAsync();
+    public async Task<IEnumerable<Collaboration>> GetCollaborationAsync(Guid userId, bool trackChanges) =>
+        await FindByCondition(collaboration => collaboration.UserId.Equals(userId), trackChanges)
+        .ToListAsync();
 
     public void CreateCollaboration(Collaboration collaboration) => Create(collaboration);
 }

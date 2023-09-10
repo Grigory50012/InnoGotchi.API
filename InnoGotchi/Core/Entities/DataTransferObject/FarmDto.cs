@@ -6,7 +6,7 @@ public class FarmDto
 
     public string Name { get; set; }
 
-    public Guid OwnerId { get; set; }
+    public Guid UserId { get; set; }
 
     public List<PetDto>? Pets { get; set; } = new();
 }

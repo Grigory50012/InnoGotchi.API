@@ -15,21 +15,20 @@ public class FarmsController : ControllerBase
     public FarmsController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
     [HttpGet("{farmId:guid}")]
-    [Authorize]
     public async Task<IActionResult> GetFarm(Guid farmId)
     {
         var farmDto = await _serviceManager.FarmService.GetFarmAsync(farmId);
 
-        return Ok(await _serviceManager.FarmService.GetFarmAsync(farmId));
+        return Ok(farmDto);
     }
 
-    //[HttpGet("{ownerId:guid}/collaborations")]
-    //public async Task<IActionResult> GetCollaborationFarms(Guid ownerId)
-    //{
-    //    var farmsDto = await _serviceManager.FarmService.GetCollaborationFarmsAsync(ownerId);
+    [HttpGet("{userId:guid}/collaborations")]
+    public async Task<IActionResult> GetCollaborationFarms(Guid userId)
+    {
+        var farmsDto = await _serviceManager.FarmService.GetCollaborationFarmsAsync(userId);
 
-    //    return Ok(farmsDto);
-    //}
+        return Ok(farmsDto);
+    }
 
     [HttpPost]
     [ServiceFilter(typeof(ValidationFilterAttribute))]

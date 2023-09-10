@@ -34,21 +34,21 @@ internal sealed class FarmService : IFarmService
         return farmDto;
     }
 
-    //public async Task<IEnumerable<FarmDto>> GetCollaborationFarmsAsync(Guid userId)
-    //{
-    //    var collaborations = await _repository.Collaboration.GetCollaborationAsync(userId, trackChanges: false);
+    public async Task<IEnumerable<FarmDto>> GetCollaborationFarmsAsync(Guid userId)
+    {
+        var collaborations = await _repository.Collaboration.GetCollaborationAsync(userId, trackChanges: false);
 
-    //    var farms = new List<Farm>();
+        var farms = new List<Farm>();
 
-    //    foreach (var collaboration in collaborations)
-    //    {
-    //        var farm = await _repository.Farm.GetFarmAsync(collaboration.FarmId, trackChanges: false);
-    //        farms.Add(farm);
-    //    }
+        foreach (var collaboration in collaborations)
+        {
+            var farm = await _repository.Farm.GetFarmAsync(collaboration.FarmId, trackChanges: false);
+            farms.Add(farm);
+        }
 
-    //    var farmsDto = _mapper.Map<IEnumerable<FarmDto>>(farms);
-    //    return farmsDto;
-    //}
+        var farmsDto = _mapper.Map<IEnumerable<FarmDto>>(farms);
+        return farmsDto;
+    }
 
     public async Task<FarmDto> CreateFarmAsync(FarmForCreationDto farm)
     {

@@ -36,7 +36,7 @@ public static class ServiceExtensions
 
     public static void ConfigureIdentity(this IServiceCollection services)
     {
-        var builder = services.AddIdentity<User, IdentityRole>(options =>
+        var builder = services.AddIdentity<User, IdentityRole<Guid>>(options =>
         {
             options.Password.RequireDigit = true;
             options.Password.RequireLowercase = false;
@@ -44,6 +44,7 @@ public static class ServiceExtensions
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequiredLength = 10;
             options.User.RequireUniqueEmail = true;
+            options.SignIn.RequireConfirmedAccount = true;
         })
         .AddEntityFrameworkStores<RepositoryContext>()
         .AddDefaultTokenProviders();

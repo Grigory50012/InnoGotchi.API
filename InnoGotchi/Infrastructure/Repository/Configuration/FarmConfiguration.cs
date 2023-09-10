@@ -1,4 +1,5 @@
 ﻿using InnoGotchi.API.Core.Entities.Models;
+using InnoGotchi.Core.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,11 +14,15 @@ public class FarmConfiguration : IEntityTypeConfiguration<Farm>
         builder.Property(farm => farm.Name).IsRequired().HasMaxLength(50);
         builder.HasIndex(farm => farm.Name).IsUnique();
 
+        builder.HasOne(farm => farm.User)
+            .WithOne(user => user.Farm)
+            .HasForeignKey<User>(user => user.FarmId);
+
         builder.HasMany(farm => farm.Pets)
             .WithOne(pet => pet.Farm)
             .HasForeignKey(pet => pet.FarmId);
 
-        //builder.HasMany(user => user.Collaborations)
-        //    .WithOne(collaboration => collaboration.Farm);
+        builder.HasMany(user => user.Collaborations)
+            .WithOne(collaboration => collaboration.Farm);
     }
 }

@@ -17,7 +17,7 @@ public class CollaborationsController : ControllerBase
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateCollaboration(string email, [FromBody] CollaborationForCreationDto collaboration)
     {
-        //await _serviceManager.CollaborationService.CreateCollaboration(email, collaboration);
+        await _serviceManager.CollaborationService.CreateCollaboration(email, collaboration);
 
         return NoContent();
     }

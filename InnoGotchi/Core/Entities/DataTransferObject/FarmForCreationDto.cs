@@ -8,5 +8,5 @@ public class FarmForCreationDto
     [MaxLength(50, ErrorMessage = "Maximum length for the farm name is 50 characters.")]
     public string Name { get; set; }
 
-    public Guid OwnerId { get; set; }
+    public Guid UserId { get; set; }
 } 
