@@ -15,6 +15,7 @@ public class FarmsController : ControllerBase
     public FarmsController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
     [HttpGet("{farmId:guid}")]
+    [Authorize]
     public async Task<IActionResult> GetFarm(Guid farmId)
     {
         var farmDto = await _serviceManager.FarmService.GetFarmAsync(farmId);
@@ -23,6 +24,7 @@ public class FarmsController : ControllerBase
     }
 
     [HttpGet("{userId:guid}/collaborations")]
+    [Authorize]
     public async Task<IActionResult> GetCollaborationFarms(Guid userId)
     {
         var farmsDto = await _serviceManager.FarmService.GetCollaborationFarmsAsync(userId);

@@ -1,6 +1,7 @@
 ﻿using InnoGotchi.API.Core.Services.Abstractions;
 using InnoGotchi.Core.Entities.ActionFilter;
 using InnoGotchi.Core.Entities.DataTransferObject;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoGotchi.Controllers;
@@ -15,6 +16,7 @@ public class CollaborationsController : ControllerBase
 
     [HttpPost("{email}")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
+    [Authorize]
     public async Task<IActionResult> CreateCollaboration(string email, [FromBody] CollaborationForCreationDto collaboration)
     {
         await _serviceManager.CollaborationService.CreateCollaboration(email, collaboration);
