@@ -10,4 +10,5 @@ public interface IServiceManager
     IFarmService FarmService { get; }
     IPetService PetService { get; }
     IAuthenticationService AuthenticationService { get; }
+    IUserService UserService { get; }
 }

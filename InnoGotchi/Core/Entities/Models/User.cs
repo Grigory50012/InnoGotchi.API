@@ -6,8 +6,11 @@ namespace InnoGotchi.Core.Entities.Models;
 public class User : IdentityUser<Guid>
 {
     public string Password { get; set; }
+
     public string FirstName { get; set; }
+
     public string LastName { get; set; }
+
     public byte[]? Avatar { get; set; }
 
     public Guid FarmId { get; set; }

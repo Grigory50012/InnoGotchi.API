@@ -17,6 +17,7 @@ public sealed class ServiceManager : IServiceManager
     private readonly Lazy<IFarmService> _farmService;
     private readonly Lazy<IPetService> _petService;
     private readonly Lazy<IAuthenticationService> _authenticationService;
+    private readonly Lazy<IUserService> _userService;
 
     public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, 
         UserManager<User> userManager, IConfiguration configuration)
@@ -26,6 +27,7 @@ public sealed class ServiceManager : IServiceManager
         _farmService = new Lazy<IFarmService>(() => new FarmService(repositoryManager, mapper));
         _petService = new Lazy<IPetService>(() => new PetService(repositoryManager, mapper));
         _authenticationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(mapper, userManager, configuration));
+        _userService = new Lazy<IUserService>(() => new UserService(repositoryManager, mapper, userManager));
     }
 
     public ICollaborationService CollaborationService => _collaborationService.Value;
@@ -33,4 +35,5 @@ public sealed class ServiceManager : IServiceManager
     public IFarmService FarmService => _farmService.Value;
     public IPetService PetService => _petService.Value;
     public IAuthenticationService AuthenticationService => _authenticationService.Value;
+    public IUserService UserService => _userService.Value;
 }

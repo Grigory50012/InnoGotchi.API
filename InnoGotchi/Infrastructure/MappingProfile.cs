@@ -21,6 +21,8 @@ public class MappingProfile : Profile
         CreateMap<Collaboration, CollaborationDto>();
         CreateMap<CollaborationForCreationDto, Collaboration>();
 
+
+        CreateMap<UserForUpdateDto, User>().ReverseMap(); ;
         CreateMap<UserForRegistrationDto, User>();
     }
 }
