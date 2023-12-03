@@ -8,12 +8,12 @@ public class CollaborationsConfiguration : IEntityTypeConfiguration<Collaboratio
 {
     public void Configure(EntityTypeBuilder<Collaboration> builder)
     {
-        builder.HasKey(collaboration => new {collaboration.FarmId });
+        builder.HasKey(collaboration => new {collaboration.FarmId, collaboration.UserId});
 
-        //builder.HasOne(collaboration => collaboration.User)
-        //    .WithMany(user => user.Collaborations)
-        //    .HasForeignKey(collaboration => collaboration.UserId)
-        //    .OnDelete(DeleteBehavior.NoAction);
+        builder.HasOne(collaboration => collaboration.User)
+            .WithMany(user => user.Collaborations)
+            .HasForeignKey(collaboration => collaboration.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(collaboration => collaboration.Farm)
             .WithMany(farm => farm.Collaborations)

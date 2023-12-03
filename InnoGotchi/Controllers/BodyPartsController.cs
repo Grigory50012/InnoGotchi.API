@@ -6,6 +6,7 @@ namespace InnoGotchi.Controllers;
 
 [Route("api/bodyParts")]
 [ApiController]
+[Authorize]
 public class BodyPartsController : ControllerBase
 {
     private readonly IServiceManager _serviceManager;
@@ -13,11 +14,8 @@ public class BodyPartsController : ControllerBase
     public BodyPartsController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> GetBodyParts()
     {
-        var bodyPartsDto = await _serviceManager.BodyPartService.GetBodyPartsAsync();
-
-        return Ok(bodyPartsDto);
+        return Ok(await _serviceManager.BodyPartService.GetBodyPartsAsync());
     }
 }

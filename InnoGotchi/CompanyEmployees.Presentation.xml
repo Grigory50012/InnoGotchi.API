@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>InnoGotchi</name>
+    </assembly>
+    <members>
+        <member name="M:InnoGotchi.Controllers.BodyPartsController.GetBodyParts">
+            <summary>
+            Gets the list of all body parts
+            </summary>
+            <returns>The body parts list</returns>
+        </member>
+        <member name="T:InnoGotchi.Migrations.DataBaseCreation">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.DataBaseCreation.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.DataBaseCreation.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.DataBaseCreation.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:InnoGotchi.Migrations.PetNameIsUnique">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.PetNameIsUnique.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.PetNameIsUnique.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.PetNameIsUnique.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:InnoGotchi.Migrations.replacingNotNullDateOfDeath">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.replacingNotNullDateOfDeath.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.replacingNotNullDateOfDeath.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.replacingNotNullDateOfDeath.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:InnoGotchi.Migrations.ChangeDataBase">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.ChangeDataBase.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.ChangeDataBase.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.ChangeDataBase.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:InnoGotchi.Migrations.CreatingIdentityTables">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.CreatingIdentityTables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.CreatingIdentityTables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.CreatingIdentityTables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:InnoGotchi.Migrations.AddCollaborations">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.AddCollaborations.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.AddCollaborations.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.AddCollaborations.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:InnoGotchi.Migrations.AdditionalUserFiledsForRefreshToken">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.AdditionalUserFiledsForRefreshToken.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.AdditionalUserFiledsForRefreshToken.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:InnoGotchi.Migrations.AdditionalUserFiledsForRefreshToken.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

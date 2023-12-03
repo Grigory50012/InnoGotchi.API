@@ -1,6 +1,7 @@
 ﻿using InnoGotchi.Core.Entities.ErrorModel;
 using InnoGotchi.Core.Entities.Exceptions.BadRequestException;
 using InnoGotchi.Core.Entities.Exceptions.NotFoundExcrption;
+using InnoGotchi.Core.Entities.Exceptions.UnauthorizedException;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
 
@@ -23,6 +24,7 @@ public static class ExceptionMiddlewareExtensions
                     {
                         NotFoundException => StatusCodes.Status404NotFound,
                         BadRequestException => StatusCodes.Status400BadRequest,
+                        UnauthorizedException => StatusCodes.Status401Unauthorized,
                         _ => StatusCodes.Status500InternalServerError
                     };
 

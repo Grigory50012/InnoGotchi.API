@@ -9,9 +9,7 @@ namespace InnoGotchi.API.Infrastructure.Repository.UserRepositories;
 public class PetRepository : RepositoryBase<Pet>, IPetRepository
 {
     public PetRepository(RepositoryContext repositoryContext)
-        : base(repositoryContext)
-    {
-    }
+        : base(repositoryContext) { }
 
     public async Task<PagedList<Pet>> GetAllPetsAsync(PetParameters petParameters, bool trackChanges)
     {

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using InnoGotchi.Core.Entities.DataTransferObject;
 using InnoGotchi.Core.Entities.Exceptions.BadRequestException;
+using InnoGotchi.Core.Entities.Exceptions.NotFoundExcrption;
+using InnoGotchi.Core.Entities.Exceptions.UnauthorizedException;
 using InnoGotchi.Core.Entities.Models;
 using InnoGotchi.Core.Services.Abstractions.UserServices;
 using Microsoft.AspNetCore.Identity;
@@ -27,30 +29,48 @@ internal sealed class AuthenticationService : IAuthenticationService
         _configuration = configuration;
     }
 
-    public async Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration)
+    public async Task RegisterUser(UserForRegistrationDto userForRegistration)
     {
         var user = _mapper.Map<User>(userForRegistration);
 
         var result = await _userManager.CreateAsync(user, userForRegistration.Password);
             
         if (result.Succeeded)
+        {
             await _userManager.AddToRolesAsync(user, userForRegistration.Roles);
+        }
+        else
+        {
+            string errorMessage = string.Empty;
 
-        return result;
+            foreach (var error in result.Errors)
+               errorMessage += $"{error.Code}: {error.Description} ";
+
+            throw new RegisterUserBadRequestException(errorMessage);
+        }
     }
 
     public async Task<bool> ValidateUser(UserForAuthenticationDto userForAuth)
     {
         _user = await _userManager.FindByEmailAsync(userForAuth.Email);
 
+        if (_user is null)
+            throw new UserNotFoundByEmailException(userForAuth.Email);
+
         var result = (await _userManager.CheckPasswordAsync(_user, userForAuth.Password));
+
+        if (!result)
+            throw new UnauthorizedUserException();
+
         return result;
     }
 
     public async Task<TokenDto> CreateToken(bool populateExp)
     {
         var signingCredentials = GetSigningCredentials();
+
         var claims = await GetClaims();
+
         var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
 
         var refreshToken = GenerateRefreshToken();
@@ -70,7 +90,9 @@ internal sealed class AuthenticationService : IAuthenticationService
     private SigningCredentials GetSigningCredentials()
     {
         var key = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET"));
+
         var secret = new SymmetricSecurityKey(key);
+
         return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
     }
 
@@ -82,6 +104,7 @@ internal sealed class AuthenticationService : IAuthenticationService
         };
 
         var roles = await _userManager.GetRolesAsync(_user);
+
         foreach (var role in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
@@ -93,6 +116,7 @@ internal sealed class AuthenticationService : IAuthenticationService
     private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
+
         var tokenOptions = new JwtSecurityToken
         (
             issuer: jwtSettings["validIssuer"],
@@ -108,9 +132,11 @@ internal sealed class AuthenticationService : IAuthenticationService
     private string GenerateRefreshToken()
     {
         var randomNumber = new byte[32];
+
         using (var rng = RandomNumberGenerator.Create())
         {
             rng.GetBytes(randomNumber);
+
             return Convert.ToBase64String(randomNumber);
         }
     }
@@ -121,8 +147,9 @@ internal sealed class AuthenticationService : IAuthenticationService
 
         var user = await _userManager.FindByEmailAsync(_user.Email);
 
-        if (user == null || user.RefreshToken != tokenDto.RefreshToken || 
-            user.RefreshTokenExpiryTime <= DateTime.Now)
+        if (user is null
+            || user.RefreshToken != tokenDto.RefreshToken
+            || user.RefreshTokenExpiryTime <= DateTime.Now)
             throw new RefreshTokenBadRequest();
 
         _user = user;
@@ -153,12 +180,10 @@ internal sealed class AuthenticationService : IAuthenticationService
 
         var jwtSecurityToken = securityToken as JwtSecurityToken;
 
-        if (jwtSecurityToken == null || 
-            !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+        if (jwtSecurityToken is null
+            || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, 
             StringComparison.InvariantCultureIgnoreCase))
-        {
             throw new SecurityTokenException("Invalid token");
-        }
 
         return principal;
     }

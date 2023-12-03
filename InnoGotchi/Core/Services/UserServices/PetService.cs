@@ -6,6 +6,7 @@ using InnoGotchi.Core.Entities.DataTransferObject;
 using InnoGotchi.Core.Entities.Exceptions.BadRequestException;
 using InnoGotchi.Core.Entities.Exceptions.NotFoundExcrption;
 using InnoGotchi.Core.Entities.RequestFeatures;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace InnoGotchi.API.Core.Services.UserServices;
 
@@ -27,6 +28,7 @@ internal sealed class PetService : IPetService
         var pets = await _repository.Pet.GetAllPetsAsync(petParameters, trackChanges: false);
 
         var petsDto = _mapper.Map<IEnumerable<PetDto>>(pets);
+
         return (pets: petsDto, metaData: pets.MetaData);
     }
 
@@ -46,15 +48,19 @@ internal sealed class PetService : IPetService
     {
         var pet = await GetPetAndCheckIfItExistssAsync(petId, trackChanges: false);
 
-        var petDto = _mapper.Map<PetDto>(pet);
-        return petDto;
+        return _mapper.Map<PetDto>(pet);
     }
 
-    public async Task<(PetForUpdateDto petToPatch, Pet pet)> GetPetForPatchAsync(Guid petId)
+    public async Task<(PetForUpdateDto petToPatch, Pet pet)> GetPetForPatchAsync(Guid petId,
+        JsonPatchDocument<PetForUpdateDto> patchDoc)
     {
+        if (patchDoc is null)
+            throw new PatchDocumentObjectIsNullBadRequestException();
+
         var pet = await GetPetAndCheckIfItExistssAsync(petId, trackChanges: true);
 
         var petToPatch = _mapper.Map<PetForUpdateDto>(pet);
+
         return (petToPatch, pet);
     }
 
@@ -73,10 +79,10 @@ internal sealed class PetService : IPetService
         var petEntity = _mapper.Map<Pet>(pet);
 
         _repository.Pet.CreatePet(petEntity);
+
         await _repository.SaveAsync();
 
-        var petDto = _mapper.Map<PetDto>(petEntity);
-        return petDto;
+        return _mapper.Map<PetDto>(petEntity);
     }
 
     public async Task SaveChangesForPatchAsync(PetForUpdateDto petToPatch, Pet pet)

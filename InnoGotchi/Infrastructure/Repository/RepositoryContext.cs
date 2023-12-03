@@ -16,9 +16,7 @@ public class RepositoryContext : IdentityDbContext<User, IdentityRole<Guid>, Gui
     public DbSet<Collaboration> Collaborations { get; set; }
 
     public RepositoryContext(DbContextOptions<RepositoryContext> options)
-        : base(options)
-    {
-    }
+        : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -29,6 +27,5 @@ public class RepositoryContext : IdentityDbContext<User, IdentityRole<Guid>, Gui
         modelBuilder.ApplyConfiguration(new FarmConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new PetConfiguration());
-        modelBuilder.ApplyConfiguration(new RoleConfiguration());
     }
 }

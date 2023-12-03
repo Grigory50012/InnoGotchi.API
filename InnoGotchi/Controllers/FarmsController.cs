@@ -8,6 +8,7 @@ namespace InnoGotchi.Controllers;
 
 [Route("api/farms")]
 [ApiController]
+[Authorize]
 public class FarmsController : ControllerBase
 {
     private readonly IServiceManager _serviceManager;
@@ -15,7 +16,6 @@ public class FarmsController : ControllerBase
     public FarmsController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
     [HttpGet("{farmId:guid}")]
-    [Authorize]
     public async Task<IActionResult> GetFarm(Guid farmId)
     {
         var farmDto = await _serviceManager.FarmService.GetFarmAsync(farmId);
@@ -24,7 +24,6 @@ public class FarmsController : ControllerBase
     }
 
     [HttpGet("{userId:guid}/collaborations")]
-    [Authorize]
     public async Task<IActionResult> GetCollaborationFarms(Guid userId)
     {
         var farmsDto = await _serviceManager.FarmService.GetCollaborationFarmsAsync(userId);
@@ -34,7 +33,6 @@ public class FarmsController : ControllerBase
 
     [HttpPost]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
-    [Authorize]
     public async Task<IActionResult> CreateFarm([FromBody] FarmForCreationDto farm)
     {
         var farmDto = await _serviceManager.FarmService.CreateFarmAsync(farm);

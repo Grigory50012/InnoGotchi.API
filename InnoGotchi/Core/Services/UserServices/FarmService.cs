@@ -18,20 +18,21 @@ internal sealed class FarmService : IFarmService
         _mapper = mapper;
     }
 
-    private async Task<Farm> GetFarmAndCheckIfItExistssAsync(Guid id, bool trackChanges)
-    {
-        var farm = await _repository.Farm.GetFarmAsync(id, trackChanges: true);
-        if (farm is null)
-            throw new FarmNotFoundException(id);
-        return farm;
-    }
-
     public async Task<FarmDto> GetFarmAsync(Guid farmId)
     {
-        var farm = await GetFarmAndCheckIfItExistssAsync(farmId, trackChanges: false);
+        var farm = await GetFarmAndCheckIfItExistssAsync(farmId);
 
-        var farmDto = _mapper.Map<FarmDto>(farm);
-        return farmDto;
+        return _mapper.Map<FarmDto>(farm);
+    }
+
+    private async Task<Farm> GetFarmAndCheckIfItExistssAsync(Guid id)
+    {
+        var farm = await _repository.Farm.GetFarmAsync(id, trackChanges: true);
+
+        if (farm is null)
+            throw new FarmNotFoundException(id);
+
+        return farm;
     }
 
     public async Task<IEnumerable<FarmDto>> GetCollaborationFarmsAsync(Guid userId)
@@ -46,8 +47,7 @@ internal sealed class FarmService : IFarmService
             farms.Add(farm);
         }
 
-        var farmsDto = _mapper.Map<IEnumerable<FarmDto>>(farms);
-        return farmsDto;
+        return _mapper.Map<IEnumerable<FarmDto>>(farms); 
     }
 
     public async Task<FarmDto> CreateFarmAsync(FarmForCreationDto farm)
@@ -55,9 +55,9 @@ internal sealed class FarmService : IFarmService
         var farmEntity = _mapper.Map<Farm>(farm);
         
         _repository.Farm.CreateFarm(farmEntity);
+
         await _repository.SaveAsync();
 
-        var farmDto = _mapper.Map<FarmDto>(farmEntity);
-        return farmDto;
+        return _mapper.Map<FarmDto>(farmEntity);
     }
 }

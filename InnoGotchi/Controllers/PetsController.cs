@@ -1,7 +1,6 @@
 ﻿using InnoGotchi.API.Core.Services.Abstractions;
 using InnoGotchi.Core.Entities.ActionFilter;
 using InnoGotchi.Core.Entities.DataTransferObject;
-using InnoGotchi.Core.Entities.Exceptions.BadRequestException;
 using InnoGotchi.Core.Entities.RequestFeatures;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
@@ -19,7 +18,6 @@ public class PetsController : ControllerBase
     public PetsController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> GetAllPets([FromQuery] PetParameters petParameters)
     {
         var pagedResult = await _serviceManager.PetService.GetAllPetsAsync(petParameters);
@@ -52,10 +50,7 @@ public class PetsController : ControllerBase
     [Authorize]
     public async Task<IActionResult> UpdatePet(Guid petId, [FromBody] JsonPatchDocument<PetForUpdateDto> patchDoc)
     {
-        if (patchDoc is null)
-            throw new PatchDocObjectIsNullBadRequestException();
-
-        var (petToPatch, pet) = await _serviceManager.PetService.GetPetForPatchAsync(petId);
+        var (petToPatch, pet) = await _serviceManager.PetService.GetPetForPatchAsync(petId, patchDoc);
 
         patchDoc.ApplyTo(petToPatch);
 

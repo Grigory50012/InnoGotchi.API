@@ -1,6 +1,5 @@
 ﻿using InnoGotchi.API.Core.Services.Abstractions;
 using InnoGotchi.Core.Entities.DataTransferObject;
-using InnoGotchi.Core.Entities.Exceptions.BadRequestException;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -9,22 +8,19 @@ namespace InnoGotchi.Controllers
 {
     [Route("api/users")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
 
         public UsersController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
-        [HttpPatch("{email}")]
-        [Authorize]
-        public async Task<IActionResult> UpdateUser(string email, [FromBody] JsonPatchDocument<UserForUpdateDto> userPatchDoc)
+        [HttpPatch("{userId:guid}")]
+        public async Task<IActionResult> UpdateUser(Guid userId, [FromBody] JsonPatchDocument<UserForUpdateDto> patchDoc)
         {
-            if (userPatchDoc is null)
-                throw new PatchDocObjectIsNullBadRequestException();
+            var (userToPatch, user) = await _serviceManager.UserService.GetUserForPatchAsync(userId, patchDoc);
 
-            var (userToPatch, user) = await _serviceManager.UserService.GetUserForPatchAsync(email);
-
-            userPatchDoc.ApplyTo(userToPatch);
+            patchDoc.ApplyTo(userToPatch);
 
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);

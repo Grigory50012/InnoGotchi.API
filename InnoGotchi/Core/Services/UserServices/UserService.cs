@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using InnoGotchi.API.Core.Contracts;
 using InnoGotchi.Core.Entities.DataTransferObject;
+using InnoGotchi.Core.Entities.Exceptions.BadRequestException;
+using InnoGotchi.Core.Entities.Exceptions.NotFoundExcrption;
 using InnoGotchi.Core.Entities.Models;
 using InnoGotchi.Core.Services.Abstractions.UserServices;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace InnoGotchi.Core.Services.UserServices;
 
@@ -22,9 +25,16 @@ public class UserService : IUserService
         _userManager = userManager;
     }
 
-    public async Task<(UserForUpdateDto userToPatch, User user)> GetUserForPatchAsync(string email)
+    public async Task<(UserForUpdateDto userToPatch, User user)> GetUserForPatchAsync(Guid userId,
+        JsonPatchDocument<UserForUpdateDto> patchDoc)
     {
-        _user = await _userManager.FindByEmailAsync(email);
+        if (patchDoc is null)
+            throw new PatchDocumentObjectIsNullBadRequestException();
+
+        _user = await _userManager.FindByIdAsync(userId.ToString());
+
+        if (_user is null)
+            throw new UserNotFoundByIdException(userId);
 
         var userToPatch = _mapper.Map<UserForUpdateDto>(_user);
 

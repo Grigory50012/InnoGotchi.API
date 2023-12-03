@@ -7,9 +7,7 @@ namespace InnoGotchi.API.Infrastructure.Repository.UserRepositories;
 public class BodyPartRepository : RepositoryBase<BodyPart>, IBodyPartRepository
 {
     public BodyPartRepository(RepositoryContext repositoryContext)
-        : base(repositoryContext)
-    {
-    }
+        : base(repositoryContext) { }
 
     public async Task<IEnumerable<BodyPart>> GetBodyPartsAsync(bool trackChanges) 
         => await FindAll(trackChanges)

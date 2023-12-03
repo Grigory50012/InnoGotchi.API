@@ -3,7 +3,5 @@
 public sealed class MaxHungerLevelRangeBadRequestException : BadRequestException
 {
     public MaxHungerLevelRangeBadRequestException()
-        : base("Max HungerLevel can't be less than min HungerLevel.")
-    {
-    }
+        : base("Max HungerLevel can't be less than min HungerLevel.") { }
 }

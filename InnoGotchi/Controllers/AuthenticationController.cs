@@ -17,15 +17,7 @@ public class AuthenticationController : ControllerBase
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
     {
-        var result = await _serviceManager.AuthenticationService.RegisterUser(userForRegistration);
-
-        if (!result.Succeeded)
-        {
-            foreach (var error in result.Errors)
-                ModelState.TryAddModelError(error.Code, error.Description);
-
-            return BadRequest(ModelState);
-        }
+        await _serviceManager.AuthenticationService.RegisterUser(userForRegistration);
 
         return StatusCode(201);
     }
@@ -34,11 +26,8 @@ public class AuthenticationController : ControllerBase
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)
     {
-        if (!await _serviceManager.AuthenticationService.ValidateUser(user))
-            return Unauthorized();
-
-        var tokenDto = await _serviceManager.AuthenticationService.CreateToken(populateExp: true);
-
-        return Ok(tokenDto);
+        await _serviceManager.AuthenticationService.ValidateUser(user);
+            
+        return Ok(await _serviceManager.AuthenticationService.CreateToken(populateExp: true));
     }
 }

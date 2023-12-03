@@ -1,3 +1,10 @@
 ﻿namespace InnoGotchi.Core.Entities.DataTransferObject;
 
-public record UserForUpdateDto(string FirstName, string LastName, byte[]? Avatar);
+public class UserForUpdateDto
+{
+    public string? FirstName { get; set; }
+
+    public string? LastName { get; set; }
+    
+    public byte[]? Avatar { get; set;}
+}

@@ -4,7 +4,9 @@ public class Pet
 {
     public Guid PetId { get; set; }
 
-    public string Name { get; set; }
+    public Guid FarmId { get; set; }
+
+    public required string Name { get; set; }
 
     public DateTime DateOfBirth { get; set; }
 
@@ -16,9 +18,7 @@ public class Pet
 
     public DateTime DrinkingDate { get; set; }
 
-    public Guid FarmId { get; set; }
-    public Farm Farm { get; set; }
+    public required Farm Farm { get; set; }
 
     public List<BodyPart> BodyParts { get; set; } = new();
-
 }

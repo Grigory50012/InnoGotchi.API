@@ -1,11 +1,13 @@
-﻿using InnoGotchi.API.Core.Entities.Models;
-using InnoGotchi.Core.Entities.DataTransferObject;
+﻿using InnoGotchi.Core.Entities.DataTransferObject;
 using InnoGotchi.Core.Entities.Models;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace InnoGotchi.Core.Services.Abstractions.UserServices;
 
 public interface IUserService
 {
-    Task<(UserForUpdateDto userToPatch, User user)> GetUserForPatchAsync(string user);
+    Task<(UserForUpdateDto userToPatch, User user)> GetUserForPatchAsync(Guid userId,
+        JsonPatchDocument<UserForUpdateDto> patchDoc);
+
     Task SaveChangesForPatchAsync(UserForUpdateDto petToPatch, User pet);
 }

@@ -6,7 +6,7 @@ public class PetDto
 {
     public Guid PetId { get; set; }
 
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     public DateTime DateOfBirth { get; set; }
 
@@ -18,23 +18,33 @@ public class PetDto
 
     public DateTime DrinkingDate { get; set; }
 
+    public List<BodyPartDto> BodyParts { get; set; } = new();
+
     public bool IsDead => DateOfDeath < DateTime.Now;
 
     public int Age => 
         IsDead ? (DateOfDeath - DateOfBirth).Days / 7 : (DateTime.Now - DateOfBirth).Days / 7;
 
+    public int NumberOfHappyDays =>
+        IsDead ? 0 : (DateTime.Now - DaysOfHappiness).Days;
+
     public HungerLevel HungerLevel
     {
         get
         {
-            if (FeedingDate.AddDays(7) < DateTime.Now)
-                return HungerLevel.Dead;
-            if (FeedingDate.AddDays(5) < DateTime.Now)
-                return HungerLevel.Hungry;
-            if (FeedingDate.AddDays(3) < DateTime.Now)
-                return HungerLevel.Normal;
-            else
-                return HungerLevel.Full;
+            int days = (DateTime.Now - FeedingDate).Days;
+
+            switch (days)
+            {
+                case var _ when days >= 7:
+                    return HungerLevel.Dead;
+                case var _ when days >= 5:
+                    return HungerLevel.Hungry;
+                case var _ when days >= 3:
+                    return HungerLevel.Normal;
+                default:
+                    return HungerLevel.Full;
+            }
         }
     }
 
@@ -42,19 +52,19 @@ public class PetDto
     {
         get
         {
-            if (DrinkingDate.AddDays(7) < DateTime.Now)
-                return ThirstyLevel.Dead;
-            if (DrinkingDate.AddDays(5) < DateTime.Now)
-                return ThirstyLevel.Thirsty;
-            if (DrinkingDate.AddDays(3) < DateTime.Now)
-                return ThirstyLevel.Normal;
-            else
-                return ThirstyLevel.Full;
+            int days = (DateTime.Now - DrinkingDate).Days;
+
+            switch (days)
+            {
+                case var _ when days >= 7:
+                    return ThirstyLevel.Dead;
+                case var _ when days >= 5:
+                    return ThirstyLevel.Thirsty;
+                case var _ when days >= 3:
+                    return ThirstyLevel.Normal;
+                default:
+                    return ThirstyLevel.Full;
+            }
         }
     }
-
-    public int NumberOfHappyDays => 
-        IsDead ? 0 : (DateTime.Now - DaysOfHappiness).Days;
-
-    public List<BodyPartDto> BodyParts { get; set; } = new();
 }

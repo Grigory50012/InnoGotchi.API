@@ -22,7 +22,7 @@ public class FarmConfiguration : IEntityTypeConfiguration<Farm>
             .WithOne(pet => pet.Farm)
             .HasForeignKey(pet => pet.FarmId);
 
-        builder.HasMany(user => user.Collaborations)
+        builder.HasMany(farm => farm.Collaborations)
             .WithOne(collaboration => collaboration.Farm);
     }
 }

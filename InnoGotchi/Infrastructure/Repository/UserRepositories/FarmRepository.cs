@@ -7,9 +7,7 @@ namespace InnoGotchi.API.Infrastructure.Repository.UserRepositories;
 public class FarmRepository : RepositoryBase<Farm>, IFarmRepository
 {
     public FarmRepository(RepositoryContext repositoryContext)
-        : base(repositoryContext)
-    {
-    }
+        : base(repositoryContext) { }
 
     public async Task<Farm> GetFarmAsync(Guid farmId, bool trackChanges) =>
         await FindByCondition(farm => farm.FarmId.Equals(farmId), trackChanges)

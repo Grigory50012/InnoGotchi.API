@@ -8,6 +8,7 @@ namespace InnoGotchi.Controllers;
 
 [Route("api/collaborations")]
 [ApiController]
+[Authorize]
 public class CollaborationsController : ControllerBase
 {
     private readonly IServiceManager _serviceManager;
@@ -16,10 +17,10 @@ public class CollaborationsController : ControllerBase
 
     [HttpPost("{email}")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
-    [Authorize]
+    //TODO: Добавить параметры в дто.
     public async Task<IActionResult> CreateCollaboration(string email, [FromBody] CollaborationForCreationDto collaboration)
     {
-        await _serviceManager.CollaborationService.CreateCollaboration(email, collaboration);
+        //await _serviceManager.CollaborationService.CreateCollaboration(email, collaboration);
 
         return NoContent();
     }

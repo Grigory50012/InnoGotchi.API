@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InnoGotchi.Core.Entities.DataTransferObject
-{
-    public record class UserForAuthenticationDto
-    {
-        [Required(ErrorMessage = "Email is required")]
-        public string? Email { get; init; }
+namespace InnoGotchi.Core.Entities.DataTransferObject;
 
-        [Required(ErrorMessage = "Password is required")]
-        public string? Password { get; init; }
-    }
+public  class UserForAuthenticationDto
+{
+    [Required(ErrorMessage = "Email is required")]
+    public required string Email { get; init; }
+
+    [Required(ErrorMessage = "Password is required")]
+    public required string Password { get; init; }
 }

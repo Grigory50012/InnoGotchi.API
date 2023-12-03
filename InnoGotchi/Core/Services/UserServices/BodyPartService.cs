@@ -20,7 +20,6 @@ internal sealed class BodyPartService : IBodyPartService
     {
         var bodyParts = await _repository.BodyPart.GetBodyPartsAsync(trackChanges: false);
 
-        var bodyPartsDto = _mapper.Map<IEnumerable<BodyPartDto>>(bodyParts);
-        return bodyPartsDto;
+        return _mapper.Map<IEnumerable<BodyPartDto>>(bodyParts);
     }
 }

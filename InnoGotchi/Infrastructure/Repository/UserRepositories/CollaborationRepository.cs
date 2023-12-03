@@ -7,9 +7,7 @@ namespace InnoGotchi.API.Infrastructure.Repository.UserRepositories;
 public class CollaborationRepository : RepositoryBase<Collaboration>, ICollaborationRepository
 {
     public CollaborationRepository(RepositoryContext repositoryContext)
-        : base(repositoryContext)
-    {
-    }
+        : base(repositoryContext) { }
 
     public async Task<IEnumerable<Collaboration>> GetCollaborationAsync(Guid userId, bool trackChanges) =>
         await FindByCondition(collaboration => collaboration.UserId.Equals(userId), trackChanges)
