@@ -47,4 +47,31 @@ public class UserService : IUserService
 
         await _repositoryManager.SaveAsync();
     }
+
+    public async Task ChangePasswordAsync(UserPasswordForUpdateDto passwordForUpdate)
+    {
+        _user = await _userManager.FindByIdAsync(passwordForUpdate.Id.ToString());
+
+        if (_user is null)
+            throw new UserNotFoundByIdException(passwordForUpdate.Id);
+
+        IdentityResult result = 
+            await _userManager.ChangePasswordAsync(_user, passwordForUpdate.OldPassword, passwordForUpdate.NewPassword);
+
+        if (result.Succeeded)
+        {
+            _user.Password = passwordForUpdate.NewPassword;
+
+            await _repositoryManager.SaveAsync();
+        }
+        else
+        {
+            string errorMessage = string.Empty;
+
+            foreach (var error in result.Errors)
+                errorMessage += $"{error.Code}: {error.Description} ";
+
+            throw new ChangePasswordBadRequestException(errorMessage);
+        }
+    }
 }

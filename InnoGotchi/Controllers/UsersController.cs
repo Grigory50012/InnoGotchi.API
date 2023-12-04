@@ -29,5 +29,14 @@ namespace InnoGotchi.Controllers
 
             return Ok(userToPatch);
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] UserPasswordForUpdateDto userPasswordForUpdateDto)
+        {
+            await _serviceManager.UserService.ChangePasswordAsync(userPasswordForUpdateDto);
+
+            return StatusCode(200);
+        }
     }
 }

@@ -9,5 +9,7 @@ public interface IUserService
     Task<(UserForUpdateDto userToPatch, User user)> GetUserForPatchAsync(Guid userId,
         JsonPatchDocument<UserForUpdateDto> patchDoc);
 
-    Task SaveChangesForPatchAsync(UserForUpdateDto petToPatch, User pet);
+    Task SaveChangesForPatchAsync(UserForUpdateDto userToPatch, User user);
+
+    Task ChangePasswordAsync(UserPasswordForUpdateDto passwordForUpdate);
 }

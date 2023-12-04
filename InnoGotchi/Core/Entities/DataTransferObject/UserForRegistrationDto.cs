@@ -13,7 +13,7 @@ public class UserForRegistrationDto
     public ICollection<string>? Roles { get; init; }
 
     [Required(ErrorMessage = "Username is required")]
-    public required string UserName { get; init; }
+    public required string UserName { get; init; } = "UserName";
 
     [Required(ErrorMessage = "Password is required")]
     public required string Password { get; init; }
