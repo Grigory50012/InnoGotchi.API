@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using InnoGotchi.Infrastructure.Repository.Configuration;
+using System.Reflection;
 
 namespace InnoGotchi.Extensions;
 
@@ -89,7 +90,7 @@ public static class ServiceExtensions
                 Title = "InnoGotchiAPI",
                 Version = "v1"
             });
-
+            
             s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
@@ -98,6 +99,7 @@ public static class ServiceExtensions
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"
             });
+
             s.AddSecurityRequirement(new OpenApiSecurityRequirement()
             {
                 {
@@ -113,6 +115,10 @@ public static class ServiceExtensions
                     new List<string>()
                 }
             });
+
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            s.IncludeXmlComments(xmlPath);
         });
     }
 }

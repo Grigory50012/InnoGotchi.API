@@ -4,17 +4,16 @@ namespace InnoGotchi.Core.Entities.DataTransferObject;
 
 public class UserForRegistrationDto
 {
-    public required string FirstName { get; init; }
+    public required string FirstName { get; set; }
 
-    public required string LastName { get; init; }
+    public required string LastName { get; set; }
 
-    public required string Email { get; init; }
+    public string UserName { get => Email; }
 
-    public ICollection<string>? Roles { get; init; }
+    public required string Email { get; set; }
 
-    [Required(ErrorMessage = "Username is required")]
-    public required string UserName { get; init; } = "UserName";
+    public ICollection<string>? Roles { get; set; }
 
     [Required(ErrorMessage = "Password is required")]
-    public required string Password { get; init; }
+    public required string Password { get; set; }
 }
