@@ -105,9 +105,12 @@ internal sealed class AuthenticationService : IAuthenticationService
 
         var roles = await _userManager.GetRolesAsync(_user);
 
+        var id = await _userManager.GetUserIdAsync(_user);
+
         foreach (var role in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, id));
         }
 
         return claims;
@@ -156,7 +159,6 @@ internal sealed class AuthenticationService : IAuthenticationService
 
         return await CreateToken(populateExp: false);
     }
-
 
     private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
     {

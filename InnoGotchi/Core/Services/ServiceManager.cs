@@ -20,10 +20,10 @@ public sealed class ServiceManager : IServiceManager
     private readonly Lazy<IUserService> _userService;
 
     public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, 
-        UserManager<User> userManager, IConfiguration configuration)
+        UserManager<User> userManager, IConfiguration configuration, IHttpContextAccessor httpContext)
     {
         _bodyPartService = new Lazy<IBodyPartService>(() => new BodyPartService(repositoryManager, mapper));
-        _collaborationService = new Lazy<ICollaborationService>(() => new CollaborationService(repositoryManager, mapper));
+        _collaborationService = new Lazy<ICollaborationService>(() => new CollaborationService(repositoryManager, mapper, userManager, httpContext));
         _farmService = new Lazy<IFarmService>(() => new FarmService(repositoryManager, mapper));
         _petService = new Lazy<IPetService>(() => new PetService(repositoryManager, mapper));
         _authenticationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(mapper, userManager, configuration));

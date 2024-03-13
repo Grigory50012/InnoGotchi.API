@@ -42,10 +42,7 @@ internal sealed class FarmService : IFarmService
         var farms = new List<Farm>();
 
         foreach (var collaboration in collaborations)
-        {
-            var farm = await _repository.Farm.GetFarmAsync(collaboration.FarmId, trackChanges: false);
-            farms.Add(farm);
-        }
+            farms.Add(await _repository.Farm.GetFarmAsync(collaboration.FarmId, trackChanges: false));
 
         return _mapper.Map<IEnumerable<FarmDto>>(farms); 
     }

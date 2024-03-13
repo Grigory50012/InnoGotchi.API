@@ -15,12 +15,11 @@ public class CollaborationsController : ControllerBase
 
     public CollaborationsController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
-    [HttpPost("{email}")]
+    [HttpPost]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
-    //TODO: Добавить параметры в дто.
-    public async Task<IActionResult> CreateCollaboration(string email, [FromBody] CollaborationForCreationDto collaboration)
+    public async Task<IActionResult> CreateCollaboration([FromBody] CollaborationForCreationDto collaboration)
     {
-        //await _serviceManager.CollaborationService.CreateCollaboration(email, collaboration);
+        await _serviceManager.CollaborationService.CreateCollaboration(collaboration);
 
         return NoContent();
     }

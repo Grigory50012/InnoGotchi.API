@@ -3,7 +3,8 @@ using InnoGotchi.API.Core.Contracts;
 using InnoGotchi.API.Core.Entities.Models;
 using InnoGotchi.API.Core.Services.Abstractions.UserServices;
 using InnoGotchi.Core.Entities.DataTransferObject;
-using InnoGotchi.Core.Entities.Exceptions.NotFoundExcrption;
+using InnoGotchi.Core.Entities.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace InnoGotchi.API.Core.Services.UserServices;
 
@@ -11,31 +12,26 @@ internal sealed class CollaborationService : ICollaborationService
 {
     private readonly IRepositoryManager _repository;
     private readonly IMapper _mapper;
+    private readonly UserManager<User> _userManager;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CollaborationService(IRepositoryManager repository, IMapper mapper)
+    public CollaborationService(IRepositoryManager repository, IMapper mapper, 
+        UserManager<User> userManager, IHttpContextAccessor httpContextAccessor)
     {
         _repository = repository;
         _mapper = mapper;
+        _userManager = userManager;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<IEnumerable<CollaborationDto>> GetCollaborationAsync(Guid userId)
+    public async Task CreateCollaboration(CollaborationForCreationDto collaboration)
     {
-        var collaborations = await _repository.Collaboration.GetCollaborationAsync(userId, trackChanges: false);
+        collaboration.UserId = new Guid(_userManager.GetUserId(_httpContextAccessor.HttpContext.User));
 
-        return _mapper.Map<IEnumerable<CollaborationDto>>(collaborations);
+        var collaborationEntity = _mapper.Map<Collaboration>(collaboration);
+
+        _repository.Collaboration.CreateCollaboration(collaborationEntity);
+
+        await _repository.SaveAsync();
     }
-
-    //public async Task CreateCollaboration(string name, CollaborationForCreationDto collaboration)
-    //{
-    //    var user = await _repository.UserProfile.GetUserByNameAsync(name, trackChanges: false);
-    //    if (user is null)
-    //        throw new UserNotFoundException(name);
-
-    //    collaboration.UserId = user.Id;
-
-    //    var collaborationEntity = _mapper.Map<Collaboration>(collaboration);
-
-    //    _repository.Collaboration.CreateCollaboration(collaborationEntity);
-    //    await _repository.SaveAsync();
-    //}
 }

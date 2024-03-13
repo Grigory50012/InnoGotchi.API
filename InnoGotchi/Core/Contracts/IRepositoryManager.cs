@@ -4,8 +4,6 @@ namespace InnoGotchi.API.Core.Contracts;
 
 public interface IRepositoryManager
 {
-    IUserRepository UserProfile { get; }
-
     IFarmRepository Farm { get; }
 
     IPetRepository Pet{ get; }

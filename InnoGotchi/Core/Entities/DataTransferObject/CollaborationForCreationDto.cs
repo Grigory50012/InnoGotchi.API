@@ -2,7 +2,7 @@
 
 public class CollaborationForCreationDto
 {
-    public Guid FarmId { get; set; }
+    public required Guid FarmId { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
 }
