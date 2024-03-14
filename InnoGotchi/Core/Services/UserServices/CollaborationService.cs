@@ -3,6 +3,7 @@ using InnoGotchi.API.Core.Contracts;
 using InnoGotchi.API.Core.Entities.Models;
 using InnoGotchi.API.Core.Services.Abstractions.UserServices;
 using InnoGotchi.Core.Entities.DataTransferObject;
+using InnoGotchi.Core.Entities.Exceptions.NotFoundExcrption;
 using InnoGotchi.Core.Entities.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -27,6 +28,11 @@ internal sealed class CollaborationService : ICollaborationService
     public async Task CreateCollaboration(CollaborationForCreationDto collaboration)
     {
         collaboration.UserId = new Guid(_userManager.GetUserId(_httpContextAccessor.HttpContext.User));
+
+        var farm = await _repository.Farm.GetFarmAsync(collaboration.FarmId, trackChanges: false);
+
+        if (farm is null)
+            throw new FarmNotFoundException(collaboration.FarmId);
 
         var collaborationEntity = _mapper.Map<Collaboration>(collaboration);
 

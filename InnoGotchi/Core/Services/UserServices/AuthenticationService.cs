@@ -33,21 +33,32 @@ internal sealed class AuthenticationService : IAuthenticationService
     {
         var user = _mapper.Map<User>(userForRegistration);
 
-        var result = await _userManager.CreateAsync(user, userForRegistration.Password);
-            
-        if (result.Succeeded)
+        var createResult = await _userManager.CreateAsync(user, userForRegistration.Password);
+
+        if (!createResult.Succeeded)
+            throw new RegisterUserBadRequestException(GetErrorMessages(createResult));
+
+        try
         {
             await _userManager.AddToRolesAsync(user, userForRegistration.Roles);
         }
-        else
+        catch (Exception e)
         {
-            string errorMessage = string.Empty;
-
-            foreach (var error in result.Errors)
-               errorMessage += $"{error.Code}: {error.Description} ";
-
-            throw new RegisterUserBadRequestException(errorMessage);
+            await _userManager.DeleteAsync(user);
+            throw new RegisterUserBadRequestException(e.Message);
         }
+    }
+
+    private string GetErrorMessages(IdentityResult result)
+    {
+        var errorMessage = string.Empty;
+
+        foreach (var error in result.Errors)
+        {
+            errorMessage += $"{error.Code}: {error.Description} ";
+        }
+
+        return errorMessage;
     }
 
     public async Task<bool> ValidateUser(UserForAuthenticationDto userForAuth)

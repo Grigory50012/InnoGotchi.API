@@ -28,13 +28,13 @@ public class UserService : IUserService
     public async Task<(UserForUpdateDto userToPatch, User user)> GetUserForPatchAsync(Guid userId,
         JsonPatchDocument<UserForUpdateDto> patchDoc)
     {
-        if (patchDoc is null)
-            throw new PatchDocumentObjectIsNullBadRequestException();
-
         _user = await _userManager.FindByIdAsync(userId.ToString());
 
         if (_user is null)
             throw new UserNotFoundByIdException(userId);
+
+        if (patchDoc is null)
+            throw new PatchDocumentObjectIsNullBadRequestException();
 
         var userToPatch = _mapper.Map<UserForUpdateDto>(_user);
 
@@ -58,20 +58,23 @@ public class UserService : IUserService
         IdentityResult result = 
             await _userManager.ChangePasswordAsync(_user, passwordForUpdate.OldPassword, passwordForUpdate.NewPassword);
 
-        if (result.Succeeded)
+        if (!result.Succeeded)
+            throw new ChangePasswordBadRequestException(GetErrorMessages(result));
+
+        _user.Password = passwordForUpdate.NewPassword;
+
+         await _repositoryManager.SaveAsync();
+    }
+
+    private string GetErrorMessages(IdentityResult result)
+    {
+        var errorMessage = string.Empty;
+
+        foreach (var error in result.Errors)
         {
-            _user.Password = passwordForUpdate.NewPassword;
-
-            await _repositoryManager.SaveAsync();
+            errorMessage += $"{error.Code}: {error.Description} ";
         }
-        else
-        {
-            string errorMessage = string.Empty;
 
-            foreach (var error in result.Errors)
-                errorMessage += $"{error.Code}: {error.Description} ";
-
-            throw new ChangePasswordBadRequestException(errorMessage);
-        }
+        return errorMessage;
     }
 }

@@ -13,6 +13,11 @@ public class BodyPartsController : ControllerBase
 
     public BodyPartsController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
+    /// <summary>
+    /// Get all body parts
+    /// </summary>
+    /// <returns>A list of body parts.</returns>
+    /// <response code="200">Returns when the body parts are retrieved successfully</response>
     [HttpGet]
     public async Task<IActionResult> GetBodyParts()
     {

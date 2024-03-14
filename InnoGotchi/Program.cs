@@ -1,6 +1,7 @@
 using InnoGotchi.Core.Entities.ActionFilter;
 using InnoGotchi.Extensions;
 using InnoGotchi.Infrastructure.Repository.Configuration;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,11 +38,15 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseSwagger();
-app.UseSwaggerUI(s =>
+if (app.Environment.IsDevelopment())
 {
-    s.SwaggerEndpoint("/swagger/v1/swagger.json", "InnoGotchiAPI v1");
-});
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "InnoGotchiAPI v1");
+        options.RoutePrefix = string.Empty;
+    });
+}
 
 app.MapControllers();
 

@@ -20,14 +20,14 @@ internal sealed class FarmService : IFarmService
 
     public async Task<FarmDto> GetFarmAsync(Guid farmId)
     {
-        var farm = await GetFarmAndCheckIfItExistssAsync(farmId);
+        var farm = await GetFarmAndCheckIfItExistssAsync(farmId, trackChanges: false);
 
         return _mapper.Map<FarmDto>(farm);
     }
 
-    private async Task<Farm> GetFarmAndCheckIfItExistssAsync(Guid id)
+    private async Task<Farm> GetFarmAndCheckIfItExistssAsync(Guid id, bool trackChanges)
     {
-        var farm = await _repository.Farm.GetFarmAsync(id, trackChanges: true);
+        var farm = await _repository.Farm.GetFarmAsync(id, trackChanges);
 
         if (farm is null)
             throw new FarmNotFoundException(id);
